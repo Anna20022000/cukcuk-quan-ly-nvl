@@ -1,0 +1,43 @@
+@import url('./common/common.css');
+@import url('./component/button.css');
+@import url('./component/input.css');
+@import url('./component/combobox.css');
+@import url('./component/dropdown.css');
+@import url('./component/table.css');
+@import url('./component/pagigation.css');
+@import url('./component/chip-status.css');
+@import url('./component/toast.css');
+@import url('./component/checkbox.css');
+@import url('./component/dialog.css');
+@import url('./component/modal.css');
+@import url('./component/loading.css');
+@import url('./component/icon.css');
+@import url('./component/tooltip.css');
+
+@import url('./common/header.css');
+@import url('./common/navbar.css');
+@import url('./common/content.css');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    text-transform: none;
+    text-decoration: none;
+    -webkit-text-decoration-line: none;
+    text-decoration-line: none;
+    -webkit-text-decoration-style: initial;
+    text-decoration-style: solid;
+    -webkit-text-decoration-color: initial;
+    text-decoration-color: initial;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+body{
+    font-family: helvetica,arial,verdana,sans-serif;
+    font-size: 13px;
+    background: #f4f5f8;
+    font-weight: 400;
+}

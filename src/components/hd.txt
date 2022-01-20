@@ -1,0 +1,2 @@
+components: Chứa các components dùng chung
+- views: chứa các trang

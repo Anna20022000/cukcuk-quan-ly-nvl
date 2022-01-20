@@ -1,0 +1,40 @@
+.m-row{
+    display: block;
+    width: 100%;
+}
+.m-row>label{
+    display: block;
+    margin-top: 10px;
+}
+.m-text-center{
+    text-align: center;
+}
+.m-text-right{
+    text-align: right;
+}
+.m-text-left{
+    text-align: left;
+}
+/* padding */
+.m-pl-8{
+    padding-left: 8px;
+}
+.m-pr-8{
+    padding-right: 8px;
+}
+.m-plr-10{
+    padding: 0 10px;
+}
+.m-pl-10{
+    padding-left: 10px;
+}
+.m-pr-10{
+    padding-right: 10px;
+}
+/* margin */
+.m-mr-5{
+    margin-right: 5px;
+}
+.m-mr-8{
+    margin-right: 8px;
+}

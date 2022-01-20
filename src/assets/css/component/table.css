@@ -1,0 +1,78 @@
+.m-table {
+  border-spacing: unset;
+  border: unset;
+  border-collapse: collapse;
+  width: 100%;
+  background-color: #ededed;
+}
+table.m-table tr{
+  box-sizing: border-box;
+  height: 24px !important;
+  border-bottom: 1px solid #ddd;
+  cursor: default;
+}
+table.m-table tr > th {
+  box-sizing: border-box;
+  text-align: center;
+  font-weight: lighter;
+  position: sticky;
+  top: 28px;
+  background-color: #ededed;
+  /* height: 55px !important; */
+}
+table th .m-th-name{
+  height: 29px !important;
+  padding: 7px 10px;
+  vertical-align: center;
+}
+table .m-filter{
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+.m-cbb-filter span{
+  display: inline-block;
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+.m-filter .m-input{
+  width: 100%;
+}
+
+table.m-table tbody tr:hover {
+  background-color: #d7e9f4;
+}
+table.m-table td{
+  padding: 5px 10px 4px !important;
+}
+table.m-table td,th {
+  padding: 0 2px;
+  /* white-space: pre-wrap; */  
+  border-left: 1px solid;
+  border-color: #d9d9d9;
+}
+table.m-table td,th:last-child{
+  border-right: 1px solid;
+  border-color: #d9d9d9;
+}
+tbody {
+  display:block;
+  height: calc(100vh - 225px);
+  overflow: scroll;
+  background-color: #fff;
+}
+thead, tbody tr {
+  display:table;
+  width:100%;
+  table-layout:fixed;
+}
+thead {
+  width: calc( 100% - 17px);
+  min-height: 55px;
+}

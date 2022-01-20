@@ -1,0 +1,61 @@
+.m-paginate{
+    height: 28px;
+    width: 100%;
+    padding-right: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    bottom: 8px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    z-index: 1;
+}
+/* LEFT */
+.m-paginate .m-paging-left{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    line-height: 28px;
+}
+.m-page-bar{
+    display: flex;
+    align-items: center;
+}
+.m-page-bar div.mi-16{
+    cursor: pointer;
+    height: 24px;
+    width: 24px;
+    margin-left: 8px;
+    border: 1px solid #fff;
+}
+.m-page-bar div.mi-16:hover{
+    border-color: #ccc;
+    background-color: #f2f2f2;
+}
+.m-text-paging{
+    padding: 0 4px;
+    color: #333f49;
+}
+
+
+.m-chosse-size{
+    margin-left: 20px;
+}
+.m-chosse-size .m-combobox{
+    height: 24px !important;
+    width: 50px;
+    border: 1px solid #ccc;
+}
+.m-chosse-size .m-combobox input{
+    background-color: #f2f2f2 !important;
+    color: #333f49;
+}
+.m-chosse-size .m-combobox button{
+    background-color: #fff !important;
+    color: #333f49;
+    width: 24px !important;
+}
+.m-paginate .m-paging-center .m-paging-number div.m-page:hover{
+    background-color: #bbbbbb;
+}

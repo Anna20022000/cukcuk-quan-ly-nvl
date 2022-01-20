@@ -1,0 +1,23 @@
+.m-combobox{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    height: 32px;
+}
+
+.m-combobox input{
+    width: 100%;
+    line-height: 26px !important;
+    border: unset;
+    padding: 3px 5px 0;
+    font-size: 12px/15px;
+    font-family: arial,sans-serif!important;
+    background-color: #005082!important;
+    color: #fff;
+}
+
+.m-combobox .m-combobox-btn{
+    width: 22px;
+    background-color: #005082!important;
+    border: unset;
+}

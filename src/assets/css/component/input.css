@@ -1,0 +1,21 @@
+.m-input{
+    outline: none;
+    border: 1px solid #ccc;
+    height: 24px;
+    padding: 0 5px;
+    box-sizing: border-box;
+    width: 110px;
+}
+.m-input::placeholder{
+    font-size: 11px;
+    color: #bbbbbb;
+}
+.m-input:focus{
+    border-color: #0072BC;
+}
+
+
+/* INPUT ERROR */
+.m-is-invalid{
+    border-color: #ff4747 !important;
+}

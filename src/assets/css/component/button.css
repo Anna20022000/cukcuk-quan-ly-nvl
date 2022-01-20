@@ -1,0 +1,33 @@
+.m-btn{
+    background-color: #fcfcfc;
+    height: 28px;
+    color: #000;
+    font-weight: normal;
+    padding: 3px 10px;
+    text-align: center;
+    outline: unset;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    /* border-radius: 2px; */
+    box-sizing: border-box;
+}
+.m-btn:hover,
+.m-btn:focus{
+    background-color: #E4F2EA;
+    border-color: #0072BC;
+}
+.m-btn-icon{
+    display: flex;
+    align-items: center;
+}
+/* toolbar */
+.m-toolbar .m-btn{
+    height: 22px !important;
+    padding: 2px 9px 2px 4px !important;
+    background-color: transparent;
+    border-color: transparent;
+  }
+.m-toolbar .m-btn:hover{
+    background-color: #fff !important;
+    border-color:#0072BC !important;
+}
