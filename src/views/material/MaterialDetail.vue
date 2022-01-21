@@ -144,11 +144,15 @@
 <script>
 
 import { required } from "vuelidate/lib/validators";
+import MaterialApi from "@/apis/materialApi.js";
+import Enum from "@/commons/enums.js";
+
 
 export default {
   props: [
     "isShow",
-    "material"
+    "material",
+    "mode"
   ],
   data() {
     return {
@@ -177,6 +181,7 @@ export default {
     hideModal(){
       this.$emit("showModal", false);
       this.submitted = false;
+      this.resetForm();
     },
     /**
      * Khi click vào button Cất trên form chi tiết
@@ -185,22 +190,114 @@ export default {
     btnSaveOnClick(){
       this.submitted = true;
       this.$v.$touch();
+      let me = this;
+      // Nếu form error
       if (this.$v.$invalid) {
         return;
       }
+      // Kiểm tra trạng thái
+      if(me.mode == Enum.FormMode.Create){
+        me.create(me.material);
+        me.hideModal();
+      }
+      else if (me.mode == Enum.FormMode.Update){
+        me.update(me.material, me.materialId)
+        me.hideModal();
+      }
+      else{
+        me.create(me.material);
+        this.resetForm();
+      }
+    },
+    async create(entity){
+      let me = this;
+      await EmployeeService.create(this.employee)
+        .then(function () {
+          me.$emit("showModal", false);
+          me.$toast.success(Resource.Message.Toast.Created, {timeout:2000});
+          me.$emit("getAllData");
+        })
+        .catch(function (res) {
+          switch (res.response.status) {
+            case 400: {
+              let data = res.response.data;
+              if (data) {
+                me.messageAlert = data.data[0];
+                me.isFormError = true;
+                me.$emit(
+                  "showPopupFromModal",
+                  me.messageAlert,
+                  Resource.Popup.Status.Error
+                );
+              }
+              break;
+            }
+            default:
+              alert(res);
+              break;
+          }
+        });
+    },
+    update(entity){
+
+    }
+
+    /**
+     * reset form chi tiết
+     * Author: CTKimYen (21/1/2022)
+     */
+    resetForm(){
+      this.$emit("resetFormData");
+    },
+    /**
+     * Thực hiện gọi api lấy mã NVL mới
+     * Author: CTKimYen (21/1/2022)
+     */
+    getNewMaterialCode(name){
+      let me = this;
+      //   this.listObjectFilter.push(me.objectFilter);
+      MaterialApi.getNewCode(name)
+        .then((response) => {
+          me.material.MaterialCode = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     }
   },
    watch: {
     /**
      * theo dõi sự thay đổi của biến isShowModal
      * Nếu form hiển thị (iShowModal = true) thì focus vào input đầu tiên
+     * Author: CTKimYen (21/1/2022)
      */
     isShow() {
       setTimeout(() => {
         this.$refs.txtMaterialName.focus();
       }, 10);
     },
-  },
+    /**
+     * Nếu tên NVL thay đổi thì tự động cập nhật Mã NVL
+     * Author: CTKimYen (21/1/2022)
+     */
+    "material.MaterialName": function(){
+      // Nếu tên = trống thì mã = null
+      if(this.material.MaterialName == "" || this.material.MaterialName == null){
+        this.material.MaterialCode = null;
+      }
+      // Nếu tên khác trống thì gọi api lấy mã mới
+      else{
+        if (this.timer) {
+          clearTimeout(this.timer);
+          this.timer = null;
+        }
+        this.timer = setTimeout(() => {
+        this.getNewMaterialCode(this.material.MaterialName);
+        }, 1000);
+      }
+        
+      }
+    }
 };
 </script>
 

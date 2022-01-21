@@ -16,6 +16,7 @@
       <!-- list -->
       <material-list 
       :materials="materials" 
+      :mode="formMode"
       @showModal="showModal"
       ></material-list>
     </div>
@@ -78,7 +79,9 @@
     <material-detail
     :material="material"
     :isShow="isShowModal"
+    :mode="formMode"
     @showModal="showModal"
+    @resetForm="resetFormData"
     ></material-detail>
   </div>
 </template>
@@ -95,7 +98,6 @@ export default {
   },
   data() {
     return {
-      isShowModal : false,
       /**
        * Danh sách NVL
        */
@@ -137,6 +139,10 @@ export default {
       totalPage: 1,
       /** Tổng số bản ghi */
       totalRecord: 0,
+      /** Ẩn/hiện form chi tiết */
+      isShowModal : false,
+      /** Trạng thái form chi tiết - mặc định là thêm mới */
+      formMode: Enum.FormMode.Add,
     };
   },
   methods: {
@@ -165,6 +171,29 @@ export default {
           console.log(e);
         });
     },
+    /**
+     * Thực hiện reset lại thông tin NVL
+     * Author: CTKimYen (21/1/2022)
+     */
+    resetFormData(){
+      this.material = {
+        MaterialCode: "",
+        MaterialName: "",
+        Note: null,
+        Expiry: 0,
+        TimeUnit: "",
+        Quantity: 0,
+        IsFollow: 1,
+        UnitId: "",
+        UnitName: "",
+        WarehouseId: "",
+        MaterialCategoryId: "",
+        MaterialCategoryName: null,
+        Conversions: [],
+      }
+    },
+
+
   },
   /**
    * Hook Created
@@ -180,13 +209,6 @@ export default {
      */
     pageIndex: function () {
       this.getAllData();
-      //   if (this.timer) {
-      //     clearTimeout(this.timer);
-      //     this.timer = null;
-      //   }
-      //   this.timer = setTimeout(() => {
-      //     this.getAllData();
-      //   }, 1000);
     },
     pageSize: function () {
       this.pageIndex = 1;

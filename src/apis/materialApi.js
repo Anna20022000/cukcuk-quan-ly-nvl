@@ -16,15 +16,16 @@ class MaterialApi {
    * Author: CTKYen (20/1/2022)
    */
   getSingle(id){
-    return http.get(`/api/v1/Material${id}`);
+    return http.get(`/api/v1/Material/${id}`);
   }
   /**
-   * api lấy ra mã nguyên vật liệu mới
-   * @returns mã nguyên vật liệu mới
-   * Author: CTKYen (20/1/2022)
+   * api sinh mã NVL tự động theo tên NVL
+   * @param {string} name Tên NVL
+   * @returns Mã NVL mới
+   * Author: CTKimYen (21/1/2022)
    */
-  getNewEmployeeCode() {
-    return http.get(`/api/v1/Material`);
+  getNewCode(name) {
+    return http.get(`/api/v1/Material/newMaterialCode?materialName=${name}`);
   }
   /**
    * api thêm mới 1 nguyên vật liệu vào database

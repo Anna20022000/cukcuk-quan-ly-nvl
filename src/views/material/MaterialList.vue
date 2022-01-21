@@ -32,7 +32,7 @@ import MaterialListGrid from "./MaterialListGrid";
 // import { eventBus } from "../../main";
 
 export default {
-  props: ["materials"],
+  props: ["materials", "mode"],
   components: {
     MaterialListGrid,
   },

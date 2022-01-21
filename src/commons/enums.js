@@ -14,6 +14,18 @@ let Enum = {
         EndWith : 3,
         /** Không chứa */
         NotContain : 4
+    },
+    /**
+     * Trạng thái của form chi tiết
+     * Author: CTKimYen (21/1/2022)
+     */
+    FormMode:{
+        /** Thêm */
+        Add: 0,
+        /** Sửa */
+        Update:1,
+        /** Cất và thêm */
+        AddnNew: 2
     }
 
 }
