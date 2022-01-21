@@ -109,3 +109,9 @@ table.m-table tr:nth-child(2n){
   background-color: #ededed;
   pointer-events: none;
 }
+
+table tr td{
+  text-overflow: ellipsis; 
+  overflow: hidden; 
+  white-space: nowrap;
+}

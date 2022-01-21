@@ -130,7 +130,6 @@ export default {
         Calculation: null,
         Description: null,
         UnitId: null,
-        MaterialId: null,
         State: 0,
       },
       /** Danh sách các đối tượng lọc */

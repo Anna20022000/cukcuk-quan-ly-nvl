@@ -58,11 +58,10 @@
             <div class="m-modal-col-3" v-tooltip.bottom="'Đơn vị tính'">
               ĐVT <span>(*)</span>
             </div>
-            <div class="m-modal-col-9">
-              <input
-                type="text"
-                class="m-input"
-                v-tooltip.bottom="{
+            <div class="m-modal-col-9 m-row-inner">
+            <!-- COMBOBOX -->
+            <v-select class="m-modal-col-6" :options="units" :reduce="UnitName => UnitName.UnitId" label="UnitName"
+              v-tooltip.bottom="{
                   content:
                     submitted && $v.material.UnitId.$error
                       ? 'Trường này không được để trống.'
@@ -72,17 +71,18 @@
                 :class="{
                   'm-is-invalid': submitted && $v.material.UnitId.$error,
                 }"
-              />
+                ></v-select>
+            <!-- END COMBOBOX -->
             </div>
           </div>
           <div class="m-modal-col-6 m-row">
             <div class="m-modal-col-3">Kho ngầm định</div>
             <div class="m-modal-col-9">
-              <input
-                type="text"
-                class="m-input"
-                v-model="material.WarehouseId"
-              />
+            <!-- COMBOBOX -->
+            <v-select :options="warehouses" :reduce="WarehouseName => WarehouseName.WarehouseId" label="WarehouseName"
+              v-model="material.WarehouseId"
+                ></v-select>
+            <!-- END COMBOBOX -->
             </div>
           </div>
         </div>
@@ -158,7 +158,7 @@
             <i class="mi mi-16 mi-new m-mr-8"></i>
             Thêm dòng
           </button>
-          <button class="m-btn m-btn-icon">
+          <button class="m-btn m-btn-icon" @click="btnRemoveLineOnClick">
             <i class="mi mi-16 mi-delete m-mr-8"></i>
             Xóa dòng
           </button>
@@ -195,6 +195,8 @@
 <script>
 import { required } from "vuelidate/lib/validators";
 import MaterialApi from "@/apis/materialApi.js";
+import UnitApi from "@/apis/unitApi.js";
+import WarehouseApi from "@/apis/warehouseApi.js";
 import Enum from "@/commons/enums.js";
 
 export default {
@@ -203,6 +205,18 @@ export default {
     return {
       /** Trạng thái form submit */
       submitted: false,
+      units: [],
+      /** Đối tượng Đơn vị tính */
+      unit:{
+        UnitId: null,
+        UnitName: null,
+        Description: null
+      },
+      warehouses:[],
+      warehouse:{
+        WarehouseId: null,
+        WarehouseName: null,
+      }
     };
   },
   /**
@@ -264,7 +278,7 @@ export default {
       entity.Conversions.forEach(element => {
         element.ConversionRate = Number.parseInt(element.ConversionRate);
       });
-      console.log(entity);
+      
       let me = this;
       await MaterialApi.create(entity)
         .then(function () {
@@ -315,8 +329,25 @@ export default {
      */
     btnAddLineOnClick(){
       let me = this;
-      me.material.Conversions.push(me.conversion);
+      let con = {
+        ConversionId : null,
+        ConversionRate: 0,
+        Calculation: null,
+        Description: null,
+        UnitId: null,
+        State: 0,
+      };
+      me.material.Conversions.push(con);
     },
+    /**
+     * Khi click button Xóa dòng
+     * Author: CTKimYen (21/1/2022)
+     */
+    btnRemoveLineOnClick(){
+      // xóa dòng cuối cùng
+      this.material.Conversions.pop();
+    }
+    ,
     /**
      * reset form chi tiết
      * Author: CTKimYen (21/1/2022)
@@ -330,7 +361,6 @@ export default {
      */
     getNewMaterialCode(name) {
       let me = this;
-      //   this.listObjectFilter.push(me.objectFilter);
       MaterialApi.getNewCode(name)
         .then((response) => {
           me.material.MaterialCode = response.data;
@@ -339,7 +369,42 @@ export default {
           console.log(e);
         });
     },
+    /**
+     * Thực hiện lấy tất cả bản ghi Đơn vị tính
+     * Author: CTKimYen (22/1/2022)
+     */
+    getAllUnit(){
+      UnitApi.getAll()
+        .then((response) => {
+          this.units = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        }); 
+    },
+    /**
+     * Thực hiện lấy tất cả bản ghi Kho
+     * Author: CTKimYen (22/1/2022)
+     */
+    getAllWarehouse(){
+      WarehouseApi.getAll()
+        .then((response) => {
+          this.warehouses = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        }); 
+    },
+
   },
+  /**
+   * Hook
+   */
+  created(){
+    this.getAllUnit();
+    this.getAllWarehouse();
+  },
+
   watch: {
     /**
      * theo dõi sự thay đổi của biến isShowModal

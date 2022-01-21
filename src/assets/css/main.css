@@ -35,15 +35,9 @@
     font-size: inherit;
 }
 
-body{
-    font-family: helvetica,arial,verdana,sans-serif;
-    font-size: 13px;
-    background: #f4f5f8;
-    font-weight: 400;
-}
 body {
     font-family: TahomaCustom !important;
-    font-size: 13px !important;
+    font-size: 13px;
     background-color: #f4f5f8;
 }
 

@@ -35,7 +35,7 @@
     display: flex;
     justify-content: flex-start;
 }
-.m-modal-group span{
+.m-modal-group .m-modal-col-3 span{
     color: red;
 }
 .m-modal-group input,

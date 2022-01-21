@@ -2,7 +2,10 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+// import 'vue-select/dist/vue-select.css';
 
+// use Vue select
+import vSelect from 'vue-select'
 // use Vuelidate
 import Vuelidate from 'vuelidate'
 // vue mask to format phone number
@@ -13,6 +16,7 @@ import VTooltip from 'v-tooltip'
 // sử  dụng event bus
 export const eventBus = new Vue()
 
+Vue.component('v-select', vSelect)
 Vue.use(Vuelidate)
 Vue.use(VueMask)
 Vue.use(VTooltip)
