@@ -48,31 +48,64 @@ table .m-filter{
 table.m-table tbody tr:hover {
   background-color: #d7e9f4;
 }
-table.m-table td{
-  padding: 5px 10px 4px !important;
+table.m-table td {
+  padding: 3px 10px 2.5px !important;
 }
 table.m-table td,th {
   padding: 0 2px;
   /* white-space: pre-wrap; */  
   border-left: 1px solid;
-  border-color: #d9d9d9;
+  border-color: #c5c5c5;
 }
 table.m-table td,th:last-child{
   border-right: 1px solid;
-  border-color: #d9d9d9;
+  border-color: #c5c5c5;
 }
-tbody {
+table.m-table tbody {
   display:block;
-  height: calc(100vh - 225px);
+  height: calc(100vh - 215px);
   overflow: scroll;
   background-color: #fff;
 }
-thead, tbody tr {
+table.m-table thead,
+table.m-table tbody tr {
   display:table;
   width:100%;
   table-layout:fixed;
 }
-thead {
+table.m-table thead {
   width: calc( 100% - 17px);
   min-height: 55px;
+}
+table.m-table tr:nth-child(2n){
+  background-color: #fafafa;
+}
+
+/* Table inner modal */
+.m-modal-table .m-input{
+  width: 100%;
+  border-color: #fff;
+}
+.m-modal-table th{
+  border-top: 1px solid #c5c5c5;
+  border-bottom: 1px solid #c5c5c5;
+}
+.m-modal-table tr th:last-child{
+  border-right: #fff;
+}
+.m-modal-table tr td{
+  border-left: 1px solid #c5c5c5;
+  border-bottom: 1px solid #c5c5c5;
+}
+.m-modal-table tr td:first-child,
+.m-modal-table tr th:first-child{
+  width: 5%;
+  text-align: center;
+  border-left: #fff;
+  background-color: #ededed;
+}
+.m-modal-table tr td:last-child{
+  /* padding: 0 10px; */
+  background-color: #ededed;
+  pointer-events: none;
 }

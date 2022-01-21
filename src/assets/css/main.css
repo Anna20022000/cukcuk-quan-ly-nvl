@@ -41,3 +41,27 @@ body{
     background: #f4f5f8;
     font-weight: 400;
 }
+body {
+    font-family: TahomaCustom !important;
+    font-size: 13px !important;
+    background-color: #f4f5f8;
+}
+
+a {
+    text-decoration: none;
+}
+/* Import font */
+@font-face {
+    font-family: TahomaCustom ;
+    src: url('../resource/fonts/Tahoma_Regular.woff');
+}
+
+@font-face {
+    font-family: TahomaCustom bold ;
+    src: url('../resource/fonts/Tahoma_Bold.woff');
+}
+
+@font-face {
+    font-family: TahomaCustom italic ;
+    src: url('../resource/fonts/Tahoma_Italic.woff');
+}

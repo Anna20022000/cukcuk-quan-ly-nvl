@@ -78,10 +78,13 @@
     <!-- detail -->
     <material-detail
     :material="material"
+    :materialId="materialId"
     :isShow="isShowModal"
     :mode="formMode"
+    :conversion="conversion"
     @showModal="showModal"
     @resetForm="resetFormData"
+    @getAllData="getAllData"
     ></material-detail>
   </div>
 </template>
@@ -103,22 +106,32 @@ export default {
        */
       materials: [],
       /** Khóa chính bảng NVL */
-      materialId: "",
+      materialId: null,
       /** Một đối tượng NVL */
       material: {
-        MaterialCode: "",
-        MaterialName: "",
+        MaterialCode: null,
+        MaterialName: null,
         Note: null,
         Expiry: 0,
-        TimeUnit: "",
+        TimeUnit: null,
         Quantity: 0,
         IsFollow: 1,
-        UnitId: "",
-        UnitName: "",
-        WarehouseId: "",
-        MaterialCategoryId: "",
+        UnitId: null,
+        UnitName: null,
+        WarehouseId: null,
+        MaterialCategoryId: null,
         MaterialCategoryName: null,
         Conversions: [],
+      },
+      /** Một đối tượng Đơn vị chuyển đổi */
+      conversion:{
+        ConversionId : null,
+        ConversionRate: 0,
+        Calculation: null,
+        Description: null,
+        UnitId: null,
+        MaterialId: null,
+        State: 0,
       },
       /** Danh sách các đối tượng lọc */
       listObjectFilter: [],
@@ -143,6 +156,8 @@ export default {
       isShowModal : false,
       /** Trạng thái form chi tiết - mặc định là thêm mới */
       formMode: Enum.FormMode.Add,
+      
+
     };
   },
   methods: {
@@ -192,7 +207,13 @@ export default {
         Conversions: [],
       }
     },
-
+    /**
+     * Thực hiện sửa trạng thái form chi tiết theo trạng thái nhập
+     * Author: CTKimYen (21/1/2022)
+     */
+    editFormMode(mode){
+      this.formMode = mode;
+    }
 
   },
   /**

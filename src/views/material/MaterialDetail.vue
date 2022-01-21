@@ -1,5 +1,9 @@
 <template>
-  <div class="m-modal-medium" style="display: none" :class="{'m-modal-show': isShow }">
+  <div
+    class="m-modal-medium"
+    style="display: none"
+    :class="{ 'm-modal-show': isShow }"
+  >
     <div class="m-modal">
       <div class="m-modal-header">
         <div class="m-modal-title">Thêm nguyên vật liệu</div>
@@ -12,21 +16,35 @@
           <div class="m-modal-col-6 m-row m-pr-20">
             <div class="m-modal-col-3">Tên <span>(*)</span></div>
             <div class="m-modal-col-9">
-              <input type="text" class="m-input"
-              ref="txtMaterialName"
-                v-tooltip.bottom="{ content: submitted && $v.material.MaterialName.$error ? 'Trường này không được để trống.' : null }"
+              <input
+                type="text"
+                class="m-input"
+                ref="txtMaterialName"
+                v-tooltip.bottom="{
+                  content:
+                    submitted && $v.material.MaterialName.$error
+                      ? 'Trường này không được để trống.'
+                      : null,
+                }"
                 v-model="material.MaterialName"
                 :class="{
                   'm-is-invalid': submitted && $v.material.MaterialName.$error,
                 }"
-                />
+              />
             </div>
           </div>
           <div class="m-modal-col-6 m-row">
             <div class="m-modal-col-3">Mã <span>(*)</span></div>
             <div class="m-modal-col-9">
-              <input type="text" class="m-input" 
-                v-tooltip.bottom="{ content: submitted && $v.material.MaterialCode.$error ? 'Trường này không được để trống.' : null }"
+              <input
+                type="text"
+                class="m-input"
+                v-tooltip.bottom="{
+                  content:
+                    submitted && $v.material.MaterialCode.$error
+                      ? 'Trường này không được để trống.'
+                      : null,
+                }"
                 v-model="material.MaterialCode"
                 :class="{
                   'm-is-invalid': submitted && $v.material.MaterialCode.$error,
@@ -37,21 +55,34 @@
         </div>
         <div class="m-modal-group">
           <div class="m-modal-col-6 m-row">
-            <div class="m-modal-col-3" v-tooltip.bottom="'Đơn vị tính'">ĐVT <span>(*)</span></div>
+            <div class="m-modal-col-3" v-tooltip.bottom="'Đơn vị tính'">
+              ĐVT <span>(*)</span>
+            </div>
             <div class="m-modal-col-9">
-              <input type="text" class="m-input" 
-                v-tooltip.bottom="{ content: submitted && $v.material.UnitId.$error ? 'Trường này không được để trống.' : null }"
+              <input
+                type="text"
+                class="m-input"
+                v-tooltip.bottom="{
+                  content:
+                    submitted && $v.material.UnitId.$error
+                      ? 'Trường này không được để trống.'
+                      : null,
+                }"
                 v-model="material.UnitId"
                 :class="{
                   'm-is-invalid': submitted && $v.material.UnitId.$error,
-                }"/>
+                }"
+              />
             </div>
           </div>
           <div class="m-modal-col-6 m-row">
             <div class="m-modal-col-3">Kho ngầm định</div>
             <div class="m-modal-col-9">
-              <input type="text" class="m-input" 
-                v-model="material.WarehouseId"/>
+              <input
+                type="text"
+                class="m-input"
+                v-model="material.WarehouseId"
+              />
             </div>
           </div>
         </div>
@@ -59,14 +90,25 @@
           <div class="m-modal-col-6 m-row">
             <div class="m-modal-col-3">Hạn sử dụng</div>
             <div class="m-modal-col-9 m-row-inner">
-              <input type="text" class="m-input m-modal-col-6 m-mr-8" 
-                v-model="material.Expiry"/>
-              <input type="text" class="m-input m-modal-col-6" 
-                v-model="material.TimeUnit"/>
+              <input
+                type="text"
+                class="m-input m-modal-col-6 m-mr-8"
+                v-model="material.Expiry"
+              />
+              <input
+                type="text"
+                class="m-input m-modal-col-6"
+                v-model="material.TimeUnit"
+              />
             </div>
           </div>
           <div class="m-modal-col-6 m-row">
-            <div class="m-modal-col-3" v-tooltip.bottom="'Số lượng tồn tối thiểu'">SL tồn tối thiểu</div>
+            <div
+              class="m-modal-col-3"
+              v-tooltip.bottom="'Số lượng tồn tối thiểu'"
+            >
+              SL tồn tối thiểu
+            </div>
             <div class="m-modal-col-3">
               <input
                 type="text"
@@ -91,17 +133,28 @@
         </div>
         <div class="m-modal-grid-view">
           <table class="m-modal-table">
+            <thead>
             <tr>
-              <th style="width: 5%">STT</th>
+              <th>STT</th>
               <th style="width: 25%">Đơn vị chuyển đổi</th>
               <th style="width: 20%">Tỷ lệ chuyển đổi</th>
               <th style="width: 20%">Phép tính</th>
               <th>Mô tả</th>
             </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(conversion, index) in material.Conversions" :key="conversion.UnitId">
+                <td>{{ index+1 }}</td>
+                <td><input type="text" class="m-input" v-model="conversion.UnitId"></td>
+                <td><input type="text" class="m-input m-text-right" v-model="conversion.ConversionRate"></td>
+                <td><input type="text" class="m-input" v-model="conversion.Calculation"></td>
+                <td><input type="text" class="m-input" v-model="conversion.Description"></td>
+              </tr>
+              </tbody>
           </table>
         </div>
         <div class="m-end-tab">
-          <button class="m-btn m-btn-icon m-mr-5">
+          <button class="m-btn m-btn-icon m-mr-5" @click="btnAddLineOnClick">
             <i class="mi mi-16 mi-new m-mr-8"></i>
             Thêm dòng
           </button>
@@ -119,7 +172,7 @@
           </button>
         </div>
         <div class="m-footer-right">
-          <button class="m-btn m-btn-icon m-mr-8" @click="btnSaveOnClick()">
+          <button class="m-btn m-btn-icon m-mr-8" @click="btnSaveOnClick">
             <i class="mi-16 mi-save m-mr-8"></i>
             Cất
           </button>
@@ -127,7 +180,7 @@
             <i class="mi-16 mi-save-add m-mr-8"></i>
             Cất và thêm
           </button>
-          <button class="m-btn m-btn-icon">
+          <button class="m-btn m-btn-icon" @click="hideModal">
             <i class="mi-16 mi-cancel m-mr-8"></i>
             Hủy bỏ
           </button>
@@ -139,27 +192,18 @@
   </div>
 </template>
 
-
-
 <script>
-
 import { required } from "vuelidate/lib/validators";
 import MaterialApi from "@/apis/materialApi.js";
 import Enum from "@/commons/enums.js";
 
-
 export default {
-  props: [
-    "isShow",
-    "material",
-    "mode"
-  ],
+  props: ["isShow", "material", "materialId", "conversion", "mode"],
   data() {
     return {
       /** Trạng thái form submit */
-      submitted : false,
-
-    }
+      submitted: false,
+    };
   },
   /**
    * Validate dữ liệu
@@ -173,12 +217,12 @@ export default {
       UnitId: { required }, // mã đơn vị tính chính
     },
   },
-  methods:{
+  methods: {
     /**
      * Ẩn modal chi tiết
      * Author: CTKimYen (22/1/2022)
      */
-    hideModal(){
+    hideModal() {
       this.$emit("showModal", false);
       this.submitted = false;
       this.resetForm();
@@ -187,34 +231,43 @@ export default {
      * Khi click vào button Cất trên form chi tiết
      * Author: CTKimYen (22/1/2022)
      */
-    btnSaveOnClick(){
+    async btnSaveOnClick() {
       this.submitted = true;
       this.$v.$touch();
       let me = this;
       // Nếu form error
-      if (this.$v.$invalid) {
+      if (me.$v.$invalid) {
+        // stop here if form is invalid
         return;
       }
       // Kiểm tra trạng thái
-      if(me.mode == Enum.FormMode.Create){
-        me.create(me.material);
+      if (me.mode == Enum.FormMode.Add) {
+        await me.create(me.material);
         me.hideModal();
-      }
-      else if (me.mode == Enum.FormMode.Update){
-        me.update(me.material, me.materialId)
+      } else if (me.mode == Enum.FormMode.Update) {
+        await me.update(me.materialId, me.material);
         me.hideModal();
-      }
-      else{
-        me.create(me.material);
+      } else {
+        await me.create(me.material);
         this.resetForm();
       }
     },
-    async create(entity){
+    /**
+     * Thực hiện lưu thông tin NVL
+     * Author: CTKimYen (21/1/2022)
+     */
+    async create(entity) {
+      if(entity.WarehouseId == "")
+        entity.WarehouseId = null;
+      if(entity.MaterialCategoryId == "")
+        entity.MaterialCategoryId = null;
+      entity.Conversions.forEach(element => {
+        element.ConversionRate = Number.parseInt(element.ConversionRate);
+      });
+      console.log(entity);
       let me = this;
-      await EmployeeService.create(this.employee)
+      await MaterialApi.create(entity)
         .then(function () {
-          me.$emit("showModal", false);
-          me.$toast.success(Resource.Message.Toast.Created, {timeout:2000});
           me.$emit("getAllData");
         })
         .catch(function (res) {
@@ -222,38 +275,60 @@ export default {
             case 400: {
               let data = res.response.data;
               if (data) {
-                me.messageAlert = data.data[0];
-                me.isFormError = true;
-                me.$emit(
-                  "showPopupFromModal",
-                  me.messageAlert,
-                  Resource.Popup.Status.Error
-                );
+                console.log(data.data[0]);
               }
               break;
             }
             default:
-              alert(res);
+              console.log(res);
               break;
           }
         });
     },
-    update(entity){
-
-    }
-
+    /**
+     * Thực hiện sửa thông tin nguyên vật liệu
+     * Author: CTKimYen (21/1/2022)
+     */
+    async update(id, entity) {
+      let me = this;
+      await MaterialApi.update(id, entity)
+        .then(function () {
+          me.$emit("getAllData");
+        })
+        .catch(function (res) {
+          switch (res.response.status) {
+            case 400: {
+              let data = res.response.data;
+              if (data) {
+                console.log(data.data[0]);
+              }
+              break;
+            }
+            default:
+              break;
+          }
+        });
+    },
+    /**
+     * Khi click button Thêm dòng
+     * Author: CTKimYen (21/1/2022)
+     */
+    btnAddLineOnClick(){
+      let me = this;
+      me.material.Conversions.push(me.conversion);
+    },
     /**
      * reset form chi tiết
      * Author: CTKimYen (21/1/2022)
      */
-    resetForm(){
-      this.$emit("resetFormData");
+    resetForm() {
+      this.$emit("resetForm");
     },
     /**
      * Thực hiện gọi api lấy mã NVL mới
      * Author: CTKimYen (21/1/2022)
      */
-    getNewMaterialCode(name){
+    getNewMaterialCode(name) {
       let me = this;
       //   this.listObjectFilter.push(me.objectFilter);
       MaterialApi.getNewCode(name)
@@ -263,9 +338,9 @@ export default {
         .catch((e) => {
           console.log(e);
         });
-    }
+    },
   },
-   watch: {
+  watch: {
     /**
      * theo dõi sự thay đổi của biến isShowModal
      * Nếu form hiển thị (iShowModal = true) thì focus vào input đầu tiên
@@ -280,30 +355,32 @@ export default {
      * Nếu tên NVL thay đổi thì tự động cập nhật Mã NVL
      * Author: CTKimYen (21/1/2022)
      */
-    "material.MaterialName": function(){
+    "material.MaterialName": function () {
       // Nếu tên = trống thì mã = null
-      if(this.material.MaterialName == "" || this.material.MaterialName == null){
+      if (
+        this.material.MaterialName == "" ||
+        this.material.MaterialName == null
+      ) {
         this.material.MaterialCode = null;
       }
       // Nếu tên khác trống thì gọi api lấy mã mới
-      else{
+      else {
         if (this.timer) {
           clearTimeout(this.timer);
           this.timer = null;
         }
         this.timer = setTimeout(() => {
-        this.getNewMaterialCode(this.material.MaterialName);
+          this.getNewMaterialCode(this.material.MaterialName);
         }, 1000);
       }
-        
-      }
-    }
+    },
+  },
 };
 </script>
 
 <style scoped>
 @import url("../../assets/css/component/tooltip.css");
-.m-modal-show{
+.m-modal-show {
   display: block !important;
 }
 </style>

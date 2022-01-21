@@ -34,7 +34,9 @@ class MaterialApi {
    * Author: CTKYen (20/1/2022)
    */
   create(data) {
-    data.Gender = Number.parseInt(data.Gender);
+    data.Expiry = Number.parseInt(data.Expiry);
+    data.Quantity = Number.parseInt(data.Quantity);
+    data.IsFollow = Number.parseInt(data.IsFollow);
     return http.post("/api/v1/Material", data);
   }
   /**
@@ -45,7 +47,9 @@ class MaterialApi {
    * Author: CTKYen (20/1/2022)
    */
   update(id, data) {
-    data.Gender = Number.parseInt(data.Gender);
+    data.Expiry = Number.parseInt(data.Expiry);
+    data.Quantity = Number.parseInt(data.Quantity);
+    data.IsFollow = Number.parseInt(data.IsFollow);
     return http.put(`/api/v1/Material/${id}`, data);
   }
   /**
