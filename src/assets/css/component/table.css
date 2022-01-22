@@ -45,8 +45,10 @@ table .m-filter{
   width: 100%;
 }
 
-table.m-table tbody tr:hover {
-  background-color: #d7e9f4;
+table.m-table tbody tr:hover,
+.m-modal-table tbody tr:hover,
+.m-row-active{
+  background-color: #d7e9f4 !important;
 }
 table.m-table td {
   padding: 3px 10px 2.5px !important;
@@ -63,7 +65,7 @@ table.m-table td,th:last-child{
 }
 table.m-table tbody {
   display:block;
-  height: calc(100vh - 215px);
+  height: calc(100vh - 228px);
   overflow: scroll;
   background-color: #fff;
 }
@@ -80,7 +82,12 @@ table.m-table thead {
 table.m-table tr:nth-child(2n){
   background-color: #fafafa;
 }
-
+table.m-table tbody{
+-moz-user-select: none; 
+-webkit-user-select: none; 
+-ms-user-select:none; 
+user-select:none;-o-user-select:none;
+}
 /* Table inner modal */
 .m-modal-table .m-input{
   width: 100%;
@@ -93,6 +100,7 @@ table.m-table tr:nth-child(2n){
 .m-modal-table tr th:last-child{
   border-right: #fff;
 }
+
 .m-modal-table tr td{
   border-left: 1px solid #c5c5c5;
   border-bottom: 1px solid #c5c5c5;
@@ -109,9 +117,24 @@ table.m-table tr:nth-child(2n){
   background-color: #ededed;
   pointer-events: none;
 }
-
-table tr td{
-  text-overflow: ellipsis; 
-  overflow: hidden; 
+.m-modal-table tr td:last-child .m-input{
+  background-color: #ededed;
+  border-color: #ededed;
+}
+.m-modal-table tr td{
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
+table tr td .v-select{
+  border-color: #fff;
+}
+.v-select:focus{
+  border-color: #0072BC !important;
+}
+
+table.m-table tr td{
+  text-overflow: ellipsis; 
+  overflow: hidden;
+  white-space: nowrap;
+}
+

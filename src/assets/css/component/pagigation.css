@@ -39,6 +39,8 @@
 }
 .m-chosse-size{
     margin-left: 20px;
+    display: flex;
+    align-items: center;
 }
 .m-chosse-size .m-combobox{
     height: 24px !important;
@@ -57,3 +59,7 @@
 .m-paginate .m-paging-center .m-paging-number div.m-page:hover{
     background-color: #bbbbbb;
 }
+.m-disable {
+    pointer-events: none;
+    opacity: 0.4;
+  }

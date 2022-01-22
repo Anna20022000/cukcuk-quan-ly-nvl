@@ -98,6 +98,7 @@
     background-position: 2px 2px;
 }
 .mi-dropdown{
-    background: url(../../resource/trigger.png) 0px 0px;
-    background-repeat: no-repeat;
+    background: url(../../resource/trigger_gray.png) no-repeat;
+    background-position: 0 center;
+    width: 16px;
 }

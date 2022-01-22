@@ -14,77 +14,41 @@
     <!-- Content main -->
     <div class="m-content-main">
       <!-- list -->
-      <material-list 
-      :materials="materials" 
-      :mode="formMode"
-      @showModal="showModal"
+      <material-list
+        :materials="materials"
+        :material="material"
+        :materialId="materialId"
+        :mode="formMode"
+        @showModal="showModal"
+        @resetForm="resetFormData"
+        @editFormMode="editFormMode"
+        @getAllData="getAllData"
+        @getSingle="getSingle"
+        @onClickRowActive="onClickRowActive"
       ></material-list>
     </div>
     <!-- paginate -->
-    <div class="m-paginate">
-      <div class="m-paging-left">
-        <div class="m-page-bar">
-          <div
-            class="mi-16 mi-page-first"
-            @click="pageIndex = 1"
-            :class="{ 'm-disable': pageIndex == 1 }"
-          ></div>
-          <div
-            class="mi-16 mi-page-pre"
-            @click="pageIndex--"
-            :class="{ 'm-disable': pageIndex == 1 }"
-          ></div>
-          <div class="m-text-paging">|</div>
-          <div class="m-text-paging">Trang</div>
-          <div>
-            <input
-              type="input"
-              value="1"
-              :max="totalPage"
-              v-model="pageIndex"
-              class="m-input"
-              style="height: 24px; width: 38px; margin: 0 8px"
-            />
-          </div>
-          <div class="m-text-paging">trên {{ totalPage }}</div>
-          <div class="m-text-paging">|</div>
-          <div
-            class="mi-16 mi-page-next"
-            @click="pageIndex++"
-            :class="{ 'm-disable': pageIndex == totalPage }"
-          ></div>
-          <div
-            class="mi-16 mi-page-last"
-            @click="pageIndex = totalPage"
-            :class="{ 'm-disable': pageIndex == totalPage }"
-          ></div>
-          <div class="m-text-paging">|</div>
-          <div class="mi-16 mi-page-refresh"></div>
-          <div class="m-text-paging">|</div>
-        </div>
-        <div class="m-chosse-size">
-          <div class="m-combobox">
-            <input type="text" value="50" v-model="pageSize" />
-            <button class="m-combobox-btn mi-14 mi-dropdown"></button>
-          </div>
-        </div>
-      </div>
-      <div class="m-paging-right">
-        Hiển thị {{ (pageIndex-1)*pageSize+1 }} - {{ pageIndex*pageSize > totalRecord? totalRecord : pageIndex*pageSize }} trên {{ totalRecord }} kết quả
-      </div>
-    </div>
+    <base-pagination
+      :pageIndex="pageIndex"
+      :pageSize="pageSize"
+      :totalRecord="totalRecord"
+      :totalPage="totalPage"
+      :listPageSizes="listPageSizes"
+      @onChangePageIndex="onChangePageIndex"
+      @onChangePageSize="onChangePageSize"
+    ></base-pagination>
     <!-- end paginate -->
     <!-- end content main -->
     <!-- detail -->
     <material-detail
-    :material="material"
-    :materialId="materialId"
-    :isShow="isShowModal"
-    :mode="formMode"
-    :conversion="conversion"
-    @showModal="showModal"
-    @resetForm="resetFormData"
-    @getAllData="getAllData"
+      :material="material"
+      :materialId="materialId"
+      :isShow="isShowModal"
+      :mode="formMode"
+      @showModal="showModal"
+      @resetForm="resetFormData"
+      @editFormMode="editFormMode"
+      @getAllData="getAllData"
     ></material-detail>
   </div>
 </template>
@@ -92,18 +56,18 @@
 import MaterialApi from "@/apis/materialApi.js";
 import MaterialList from "./MaterialList.vue";
 import MaterialDetail from "./MaterialDetail.vue";
+import BasePagination from "../../components/BasePagination.vue";
 import Enum from "@/commons/enums.js";
 
 export default {
   components: {
     MaterialList,
     MaterialDetail,
+    BasePagination,
   },
   data() {
     return {
-      /**
-       * Danh sách NVL
-       */
+      /** Danh sách NVL */
       materials: [],
       /** Khóa chính bảng NVL */
       materialId: null,
@@ -123,15 +87,6 @@ export default {
         MaterialCategoryName: null,
         Conversions: [],
       },
-      /** Một đối tượng Đơn vị chuyển đổi */
-      conversion:{
-        ConversionId : null,
-        ConversionRate: 0,
-        Calculation: null,
-        Description: null,
-        UnitId: null,
-        State: 0,
-      },
       /** Danh sách các đối tượng lọc */
       listObjectFilter: [],
       /** Đối tượng lọc dữ liệu */
@@ -143,6 +98,8 @@ export default {
         AdditionalOperator: "AND",
         Sort: "",
       },
+      /** Danh sách các option số bản ghi trên trang */
+      listPageSizes: [25, 50, 100],
       /** Trang hiện tại */
       pageIndex: 1,
       /** Số bản ghi trên trang */
@@ -152,11 +109,9 @@ export default {
       /** Tổng số bản ghi */
       totalRecord: 0,
       /** Ẩn/hiện form chi tiết */
-      isShowModal : false,
+      isShowModal: false,
       /** Trạng thái form chi tiết - mặc định là thêm mới */
       formMode: Enum.FormMode.Add,
-      
-
     };
   },
   methods: {
@@ -165,7 +120,7 @@ export default {
      * (true-hiển thị; false-ẩn)
      * Author: CTKimYen (21/1/2022)
      */
-    showModal(mode){
+    showModal(mode) {
       this.isShowModal = mode;
     },
     /**
@@ -180,39 +135,76 @@ export default {
           me.materials = response.data.Data;
           me.totalPage = response.data.TotalPage;
           me.totalRecord = response.data.TotalRecord;
+          this.materialId = this.materials[0].MaterialId;
         })
         .catch((e) => {
           console.log(e);
         });
     },
     /**
+     * Thực hiện lấy ra thông tin của một NVL
+     * Author: CTKimYen (22/1/2022)
+     */
+    getSingle(entity){
+      try {
+        this.material = entity;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    /**
      * Thực hiện reset lại thông tin NVL
      * Author: CTKimYen (21/1/2022)
      */
-    resetFormData(){
+    resetFormData() {
       this.material = {
-        MaterialCode: "",
-        MaterialName: "",
+        MaterialCode: null,
+        MaterialName: null,
         Note: null,
         Expiry: 0,
-        TimeUnit: "",
+        TimeUnit: null,
         Quantity: 0,
         IsFollow: 1,
-        UnitId: "",
-        UnitName: "",
-        WarehouseId: "",
-        MaterialCategoryId: "",
+        UnitId: null,
+        UnitName: null,
+        WarehouseId: null,
+        MaterialCategoryId: null,
         MaterialCategoryName: null,
         Conversions: [],
-      }
+      };
     },
     /**
      * Thực hiện sửa trạng thái form chi tiết theo trạng thái nhập
      * Author: CTKimYen (21/1/2022)
      */
-    editFormMode(mode){
+    editFormMode(mode) {
       this.formMode = mode;
-    }
+    },
+    /**
+     * Chuyển tới trang khi nhập input
+     *  Author: CTKimYen (22/1/2022)
+     */
+    onChangePageIndex(pageIndex) {
+      this.pageIndex = pageIndex;
+      this.getAllData();
+    },
+    /**
+     * Chuyển tới trang khi nhập input
+     * Author: CTKimYen (22/1/2022)
+     */
+    onChangePageSize(pageSize) {
+      this.pageSize = pageSize;
+      this.pageIndex = 1;
+      this.getAllData();
+    },
+    /**
+     * Chọn 1 đối tượng và thay đổi giá trị NVL hiện tại
+     * Author: CTKimYen (22/1/2022)
+     */
+    onClickRowActive(entity) {
+      this.material = entity;
+      this.materialId = entity.MaterialId;
+    },
 
   },
   /**
@@ -222,25 +214,5 @@ export default {
     this.getAllData();
   },
 
-  watch: {
-    /**
-     * Sự kiện khi thay đổi số trang
-     * Author: CTKimYen (20/1/2022)
-     */
-    pageIndex: function () {
-      this.getAllData();
-    },
-    pageSize: function () {
-      this.pageIndex = 1;
-      this.getAllData();
-    },
-
-  },
 };
 </script>
-<style scoped>
-.m-disable {
-  pointer-events: none;
-  opacity: 0.4;
-}
-</style>

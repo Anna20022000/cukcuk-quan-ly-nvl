@@ -23,9 +23,32 @@ let Enum = {
         /** Thêm */
         Add: 0,
         /** Sửa */
-        Update:1,
+        Update: 1,
+        /** Nhân bản */
+        Duplicate: 3
+    },
+    /**
+     * Trạng thái cất
+     * Author: CTKimYen (22/1/2022)
+     */
+    ActionMode:{
+        // Cất
+        Save : 0,
         /** Cất và thêm */
-        AddnNew: 2
+        SaveNew: 1,
+    },
+
+    /**
+     * Trạng thái của một đối tượng
+     * Author: CTKimYen (21/1/2022)
+     */
+    State:{
+        /** Thêm mới */
+        Insert: 0,
+        /** Sửa */
+        Update: 1,
+        /** Xóa */
+        Delete: 2
     }
 
 }
