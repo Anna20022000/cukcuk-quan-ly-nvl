@@ -66,12 +66,14 @@ class MaterialApi {
    * @param {number} pageSize Số bản ghi/ trang
    * @param {number} pageIndex Trang số bao nhiêu
    * @param {string} listObjectFilter danh sách đối tượng để lọc dữ liệu
+   * @param {string} objectSort đối tượng để sap xep
    * @returns Danh sách nguyên vật liệu thỏa mãn điều kiện lọc
    * Author: CTKYen (20/1/2022)
    */
-  filter( pageIndex,pageSize, listObjectFilter){
+  filter( pageIndex,pageSize, listObjectFilter, objectSort){
     listObjectFilter = JSON.stringify(listObjectFilter);
-    return http.get(`/api/v1/Material/filter?pageIndex=${pageIndex}&pageSize=${pageSize}&objectFilterJson=${listObjectFilter}`);
+    objectSort = JSON.stringify(objectSort);
+    return http.get(`/api/v1/Material/filter?pageIndex=${pageIndex}&pageSize=${pageSize}&objectFilterJson=${listObjectFilter}&objectSortJson=${objectSort}`);
   }
 }
 

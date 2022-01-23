@@ -112,11 +112,10 @@ user-select:none;-o-user-select:none;
   border-left: #fff;
   background-color: #ededed;
 }
-.m-modal-table tr td:last-child{
-  /* padding: 0 10px; */
+/* .m-modal-table tr td:last-child{
   background-color: #ededed;
   pointer-events: none;
-}
+} */
 .m-modal-table tr td:last-child .m-input{
   background-color: #ededed;
   border-color: #ededed;
@@ -137,4 +136,3 @@ table.m-table tr td{
   overflow: hidden;
   white-space: nowrap;
 }
-

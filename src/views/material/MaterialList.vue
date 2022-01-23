@@ -27,6 +27,7 @@
     <material-list-grid :materials="materials"
     :materialId="materialId"
     @onClickRowActive="onClickRowActive"
+    @setObjectFilter="setObjectFilter"
     ></material-list-grid>
   </div>
 </template>
@@ -91,8 +92,6 @@ export default {
       .then(function (res) {
         // gán thông tin NVL lấy được cho material
         me.$emit("getSingle", res.data);
-        // lấy ra list ĐVCĐ
-        me.conversionsOld = me.material.Conversions;
         // Show modal detail
         me.$emit("showModal", true);
         })
@@ -144,7 +143,13 @@ export default {
           console.log(e);
         });
     },
-
+    /**
+     * Thiết lập giá trị cho danh sách lọc
+     * Author: CTKimYen (23/1/2022)
+     */
+    setObjectFilter(object){
+      this.$emit("setObjectFilter", object);
+    }
   },
 };
 </script>

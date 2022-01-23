@@ -367,3 +367,10 @@
     background-color: #005082!important;
     border: unset;
 }
+
+
+/* FILTER */
+.m-cbb-filter .v-select.m-modal-col-6.vs--single.vs--searchable{
+  width: 24px !important;
+  background-color: #fff;
+}

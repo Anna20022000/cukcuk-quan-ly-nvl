@@ -66,13 +66,9 @@
                 :options="units"
                 :reduce="(UnitName) => UnitName.UnitId"
                 label="UnitName"
-                v-tooltip.bottom="{
-                  content:
-                    submitted && $v.material.UnitId.$error
-                      ? 'Trường này không được để trống.'
-                      : null,
-                }"
+                v-tooltip.bottom="{ content: submitted && $v.material.UnitId.$error  ? 'Trường này không được để trống.' : null,  }"
                 v-model="material.UnitId"
+                @input="unit = units.find(x=> x.UnitId == material.UnitId)"
                 :class="{
                   'm-is-invalid': submitted && $v.material.UnitId.$error,
                 }"
@@ -115,8 +111,7 @@
           <div class="m-modal-col-6 m-row">
             <div
               class="m-modal-col-3"
-              v-tooltip.bottom="'Số lượng tồn tối thiểu'"
-            >
+              v-tooltip.bottom="'Số lượng tồn tối thiểu'" >
               SL tồn tối thiểu
             </div>
             <div class="m-modal-col-3">
@@ -163,9 +158,12 @@
                     label="UnitName"
                     v-model="conversion.UnitId"
                   ></v-select>
+                    <!-- @input="conversion.Description =`1 ${units.find(x=> x.UnitId == conversion.UnitId).UnitName} = ${conversion.ConversionRate} ${conversion.Calculation} ${unit.UnitName}`" -->
                 </td>
                 <td>
-                  <input type="text" class="m-input m-text-right" v-model="conversion.ConversionRate" />
+                  <input type="text" class="m-input m-text-right" v-model="conversion.ConversionRate"
+                  />
+                    <!-- @change="conversion.Description =`1 ${units.find(x=> x.UnitId == conversion.UnitId).UnitName} = ${conversion.ConversionRate} ${conversion.Calculation} ${unit.UnitName}`" -->
                 </td>
                 <td>
                   <v-select
@@ -174,9 +172,11 @@
                     label="Name"
                     v-model="conversion.Calculation"
                   ></v-select>
+                    <!-- @input="conversion.Description =`1 ${units.find(x=> x.UnitId == conversion.UnitId).UnitName} = ${conversion.ConversionRate} ${conversion.Calculation} ${unit.UnitName}`" -->
                 </td>
                 <td>
-                  <input type="text" class="m-input" v-model="conversion.Description" />
+                  <input type="text" class="m-input" v-model="conversion.Description"
+                  />
                 </td>
               </tr>
             </tbody>
@@ -285,6 +285,10 @@ export default {
     },
   },
   methods: {
+    /**
+     * Khi click vào một đvcđ lấy ra index và đvcđ đó
+     * Author: CTKimYen (22/1/2022)
+     */
     onClickRowActive(conversion, index) {
       this.conversionIndex = index;
       this.conversion = conversion;
@@ -340,17 +344,16 @@ export default {
           // stop here if form is invalid
           return;
         }
-        // Kiểm tra trạng thái
-        if (me.mode == Enum.FormMode.Add) {
+        // Kiểm tra trạng thái form
+        if (me.mode == Enum.FormMode.Add) { // Thêm
           await me.create(me.material);
-        } else if (me.mode == Enum.FormMode.Update) {
+        } else if (me.mode == Enum.FormMode.Update) { // Sửa
           await me.update(me.materialId, me.material);
         }
-
         me.submitted = false;
-
-        if (actionMode == Enum.ActionMode.Save) me.hideModal();
-        else {
+        // Kiểm tra thao tác lưu
+        if (actionMode == Enum.ActionMode.Save) me.hideModal(); // Cất
+        else { // Cất và thêm
           me.resetForm();
         }
       } catch (error) {
@@ -434,6 +437,7 @@ export default {
      */
     resetConversions() {
       let me = this;
+      me.unit = null;
       me.conversion = null;
       me.conversionIndex = null;
       me.conversions = [];
@@ -536,15 +540,13 @@ export default {
      * Author: CTKimYen (22/1/2022)
      */
     updateConversion(entity) {
+      let me = this;
       let ok = this.checkMatchUnit();
       if (ok)
-        entity.Description = `1 ${this.material.UnitName} = ${entity.ConversionRate} ${entity.Calculation} ${entity.UnitName}`;
-      else entity.UnitId = null;
+        entity.Description =`1 ${me.unit.UnitName} = ${entity.ConversionRate} ${entity.Calculation} ${entity.UnitName}`;
+      // else entity.UnitId = null;
     },
 
-    getUnitName(name) {
-      alert(name);
-    },
   },
   /**
    * Hook
@@ -553,16 +555,6 @@ export default {
     this.getAllUnit();
     this.getAllWarehouse();
     this.conversions = this.material.Conversions;
-  },
-  computed: {
-    // corrections start
-    Description: function () {
-      return this.material.Conversions.map(function (item) {
-        return `1 ${item.UnitId} = ${item.ConversionRate} ${item.Calculation}`;
-        // `1 ${this.material.UnitName} = ${entity.ConversionRate} ${entity.Calculation} ${entity.UnitName}`;
-      });
-    },
-    // corrections end
   },
 
   watch: {
@@ -576,6 +568,7 @@ export default {
         this.$refs.txtMaterialName.focus();
       }, 10);
     },
+
   },
 };
 </script>

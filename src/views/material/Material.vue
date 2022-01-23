@@ -25,6 +25,7 @@
         @getAllData="getAllData"
         @getSingle="getSingle"
         @onClickRowActive="onClickRowActive"
+        @setObjectFilter="setObjectFilter"
       ></material-list>
     </div>
     <!-- paginate -->
@@ -96,7 +97,11 @@ export default {
         Value: "",
         ValueType: "string",
         AdditionalOperator: "AND",
-        Sort: "",
+      },
+      /** Đối tượng sắp xếp */
+      objectSort: {
+        Column: null,
+        Sort: null,
       },
       /** Danh sách các option số bản ghi trên trang */
       listPageSizes: [25, 50, 100],
@@ -116,6 +121,55 @@ export default {
   },
   methods: {
     /**
+     * Thực hiện thay đổi danh sách lọc dữ liệu
+     * Author: CTKimYen (23/1/2022)
+     */
+    setObjectFilter(object) {
+      try {
+        let me = this;
+        // Nếu obj có giá trị rỗng
+        if (object.Value == "" || object.Value == null) {
+          // Neu ds loc khac rong
+          if (me.listObjectFilter.length > 0) {
+            // kiem tra xem co trung obj khong
+            for (let index = 0; index < me.listObjectFilter.length; index++) {
+              const element = me.listObjectFilter[index];
+              // neu trung thi xoa khoi ds loc
+              if (element.Column == object.Column) {
+                me.listObjectFilter.splice(index, 1);
+              }
+            }
+          }
+        }
+        // Neu obj co gia tri
+        else {
+          // Neu ds loc rong
+          if (me.listObjectFilter.length == 0) me.listObjectFilter.push(object);
+          else {
+            // Neu ds loc khac rong
+            // kiem tra trung
+            let i = 0;
+            for (let index = 0; index < me.listObjectFilter.length; index++) {
+              const element = me.listObjectFilter[index];
+              // neu trung thi sua
+              if (element.Column == object.Column) {
+                element.Value = object.Value;
+                element.Operator = object.Operator;
+                i = i + 1;
+              }
+            }
+            //Neu obj khong co trong ds loc
+            if (i < 1) {
+              me.listObjectFilter.push(object);
+            }
+          }
+        }
+        me.getAllData();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    /**
      * Thực hiện ẩn/hiện form chi tiết
      * (true-hiển thị; false-ẩn)
      * Author: CTKimYen (21/1/2022)
@@ -130,7 +184,12 @@ export default {
     getAllData() {
       let me = this;
       //   this.listObjectFilter.push(me.objectFilter);
-      MaterialApi.filter(me.pageIndex, me.pageSize, me.listObjectFilter)
+      MaterialApi.filter(
+        me.pageIndex,
+        me.pageSize,
+        me.listObjectFilter,
+        me.objectSort
+      )
         .then((response) => {
           me.materials = response.data.Data;
           me.totalPage = response.data.TotalPage;
@@ -145,7 +204,7 @@ export default {
      * Thực hiện lấy ra thông tin của một NVL
      * Author: CTKimYen (22/1/2022)
      */
-    getSingle(entity){
+    getSingle(entity) {
       try {
         this.material = entity;
       } catch (error) {
@@ -205,7 +264,6 @@ export default {
       this.material = entity;
       this.materialId = entity.MaterialId;
     },
-
   },
   /**
    * Hook Created
@@ -213,6 +271,5 @@ export default {
   created() {
     this.getAllData();
   },
-
 };
 </script>
