@@ -10,6 +10,8 @@ import vSelect from 'vue-select'
 import Vuelidate from 'vuelidate'
 // vue mask to format phone number
 import VueMask from 'v-mask'
+// 
+import money from 'v-money'
 // tooltip
 import VTooltip from 'v-tooltip'
 
@@ -19,6 +21,8 @@ export const eventBus = new Vue()
 Vue.component('v-select', vSelect)
 Vue.use(Vuelidate)
 Vue.use(VueMask)
+// register directive v-money and component <money>
+Vue.use(money, {precision: 4})
 Vue.use(VTooltip)
 
 Vue.config.productionTip = false

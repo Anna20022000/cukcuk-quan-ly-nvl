@@ -26,6 +26,7 @@
         @getSingle="getSingle"
         @onClickRowActive="onClickRowActive"
         @setObjectFilter="setObjectFilter"
+        @onChangeSortObject="onChangeSortObject"
       ></material-list>
     </div>
     <!-- paginate -->
@@ -46,11 +47,19 @@
       :materialId="materialId"
       :isShow="isShowModal"
       :mode="formMode"
+      :objectPopup="objectPopup"
       @showModal="showModal"
       @resetForm="resetFormData"
       @editFormMode="editFormMode"
       @getAllData="getAllData"
+      @showPopup="showPopup"
     ></material-detail>
+    <!-- POPUP -->
+    <base-popup
+      :objectPopup="objectPopup"
+      @showPopup="showPopup"
+    />
+    <!-- END POPUP -->
   </div>
 </template>
 <script>
@@ -58,6 +67,7 @@ import MaterialApi from "@/apis/materialApi.js";
 import MaterialList from "./MaterialList.vue";
 import MaterialDetail from "./MaterialDetail.vue";
 import BasePagination from "../../components/BasePagination.vue";
+import BasePopup from "../../components/BasePopup.vue";
 import Enum from "@/commons/enums.js";
 
 export default {
@@ -65,6 +75,7 @@ export default {
     MaterialList,
     MaterialDetail,
     BasePagination,
+    BasePopup,
   },
   data() {
     return {
@@ -117,9 +128,26 @@ export default {
       isShowModal: false,
       /** Trạng thái form chi tiết - mặc định là thêm mới */
       formMode: Enum.FormMode.Add,
+      /** Đối tượng phục vụ cho popup */
+      objectPopup:{
+        /** chế độ ẩn/hiện popup (true-hiện; false-ẩn) */
+        IsShowPopup: false,
+        /** Câu cảnh báo lỗi */
+        Message: "Đơn vị chuyển đổi không được trùng với đơn vị tính chính.",
+        /** Trạng thái hiển thị của popup */
+        PopupStatus: 1,
+      }
     };
   },
   methods: {
+    /**
+     * Thay đổi đối tượng sắp xếp khi cột thay đổi
+     * Author: CTKimYen (23/1/2022)
+     */
+      onChangeSortObject(objectSort) {
+      this.objectSort = objectSort;
+      this.getAllData();
+    },
     /**
      * Thực hiện thay đổi danh sách lọc dữ liệu
      * Author: CTKimYen (23/1/2022)
@@ -127,6 +155,7 @@ export default {
     setObjectFilter(object) {
       try {
         let me = this;
+        me.pageIndex = 1;
         // Nếu obj có giá trị rỗng
         if (object.Value == "" || object.Value == null) {
           // Neu ds loc khac rong
@@ -170,7 +199,7 @@ export default {
       }
     },
     /**
-     * Thực hiện ẩn/hiện form chi tiết
+     * Thực hiện ẩn/hiện form chi tiết NVL
      * (true-hiển thị; false-ẩn)
      * Author: CTKimYen (21/1/2022)
      */
@@ -183,7 +212,6 @@ export default {
      */
     getAllData() {
       let me = this;
-      //   this.listObjectFilter.push(me.objectFilter);
       MaterialApi.filter(
         me.pageIndex,
         me.pageSize,
@@ -240,7 +268,7 @@ export default {
       this.formMode = mode;
     },
     /**
-     * Chuyển tới trang khi nhập input
+     * Chuyển tới trang khi nhaapj pageIndex
      *  Author: CTKimYen (22/1/2022)
      */
     onChangePageIndex(pageIndex) {
@@ -248,7 +276,7 @@ export default {
       this.getAllData();
     },
     /**
-     * Chuyển tới trang khi nhập input
+     * Chuyển tới trang khi nhập pageSize
      * Author: CTKimYen (22/1/2022)
      */
     onChangePageSize(pageSize) {
@@ -263,6 +291,13 @@ export default {
     onClickRowActive(entity) {
       this.material = entity;
       this.materialId = entity.MaterialId;
+    },
+    /**
+     * Ẩn/hiện popup theo tham số
+     * Author: CTKimYen (23/1/2022)
+     */
+    showPopup(objectPopup) {
+      this.objectPopup = objectPopup;
     },
   },
   /**

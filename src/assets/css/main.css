@@ -10,6 +10,7 @@
 @import url('./component/checkbox.css');
 @import url('./component/dialog.css');
 @import url('./component/modal.css');
+@import url('./component/popup.css');
 @import url('./component/loading.css');
 @import url('./component/icon.css');
 @import url('./component/tooltip.css');
@@ -52,11 +53,11 @@ a {
 }
 
 @font-face {
-    font-family: TahomaCustom bold ;
+    font-family: 'TahomaCustom bold' ;
     src: url('../resource/fonts/Tahoma_Bold.woff');
 }
 
 @font-face {
-    font-family: TahomaCustom italic ;
+    font-family: 'TahomaCustom italic' ;
     src: url('../resource/fonts/Tahoma_Italic.woff');
 }

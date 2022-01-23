@@ -1,13 +1,23 @@
 <template>
   <div class="m-filter">
     <div class="m-cbb-filter">
-      <v-select
+      <!-- <v-select
         class="m-modal-col-6"
         :options="operators"
         :reduce="(Name) => Name.Value"
         label="Name"
         v-model="operator"
-      ></v-select>
+      ></v-select> -->
+      <v-select
+        class="m-modal-col-6"
+        :get-option-label="(option) => option.Name"
+        :options="operators"
+        :reduce="(option)=>option.Value"
+        v-model="operator" >
+        <template #option="{ Show }">
+          {{ Show }}
+        </template>
+      </v-select>
     </div>
     <input
       type="text"
@@ -29,11 +39,7 @@ export default {
       operators: [
         { Name: "*.", Show: "* : Chứa", Value: Enum.Operator.Contain },
         { Name: "=.", Show: "= : Bằng", Value: Enum.Operator.EqualTo },
-        {
-          Name: "+.",
-          Show: "+ : Bắt đầu bằng",
-          Value: Enum.Operator.BeginWith,
-        },
+        { Name: "+.", Show: "+ : Bắt đầu bằng", Value: Enum.Operator.BeginWith,},
         { Name: "-.", Show: "- : Kết thúc bằng", Value: Enum.Operator.EndWith },
         { Name: "!.", Show: "! : Không chứa", Value: Enum.Operator.NotContain },
       ],

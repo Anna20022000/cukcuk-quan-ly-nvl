@@ -68,7 +68,7 @@
   border-radius: 0px 0px 4px 4px;
   background-color: #e9ebee;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   height: 60px;
   padding: 10px 24px 10px 0;
 }

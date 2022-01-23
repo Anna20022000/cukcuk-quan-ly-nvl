@@ -23,6 +23,7 @@
             value="1"
             @blur="onChangePageIndex()"
             v-model="pageNumber"
+            v-mask="'###'"
             class="m-input"
             style="height: 24px; width: 38px"
           />
@@ -126,6 +127,7 @@ export default {
      *  Author: CTKimYen (22/1/2022)
      */
     onChangePageIndex() {
+      if(this.pageNumber < 1) this.pageNumber =1;
       if (this.pageNumber > this.totalPage) this.pageNumber = this.totalPage;
       this.$emit("onChangePageIndex", this.pageNumber);
     },
@@ -147,6 +149,13 @@ export default {
       this.pageNumber = 1;
       this.showDropdownChoseSize = false;
     },
+    /**
+     * Khi thay đổi pageIndex thì cập nhật lại trang hiển thị
+     * Author: CTKimYen (23/1/2022)
+     */
+    pageIndex(){
+      this.pageNumber = this.pageIndex;
+    }
   },
 };
 </script>

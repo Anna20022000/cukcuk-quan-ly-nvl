@@ -2,19 +2,26 @@
   <div class="m-content-table">
     <!-- table -->
     <table class="m-table">
+      <!-- Dòng tiêu đề + filter -->
       <thead class="m-text-left">
         <tr>
+          <!-- Mã -->
           <th>
-            <div class="m-th-name">Mã nguyên vật liệu</div>
-            <div >
+            <div class="m-th-name m-flex-center" @click="onChangeSortObject('MaterialCode')">Mã nguyên vật liệu 
+              <div class="mi-sort-asc" v-show="sortOrder && sortSubmitted && sortName=='MaterialCode'"></div>
+              <div class="mi-sort-desc" v-show="!sortOrder && sortSubmitted && sortName=='MaterialCode'"></div>
+            </div>
               <base-input-filter
               :column="'MaterialCode'"
               @setObjectFilter="setObjectFilter"
               />
-            </div>
           </th>
+          <!-- Tên -->
           <th>
-            <div class="m-th-name">Tên nguyên vật liệu</div>
+            <div class="m-th-name m-flex-center" @click="onChangeSortObject('MaterialName')">Tên nguyên vật liệu
+              <div class="mi-sort-asc" v-show="sortOrder && sortSubmitted && sortName=='MaterialName'"></div>
+              <div class="mi-sort-desc" v-show="!sortOrder && sortSubmitted && sortName=='MaterialName'"></div>
+            </div>
             <div>
               <base-input-filter
               :column="'MaterialName'"
@@ -22,18 +29,25 @@
               />
             </div>
           </th>
+          <!-- Tính chất -->
           <th>
-            <div class="m-th-name">Tính chất</div>
+            <div class="m-th-name m-flex-center" @click="onChangeSortObject('MaterialCategoryName')">Tính chất
+              <div class="mi-sort-asc" v-show="sortOrder && sortSubmitted && sortName=='MaterialCategoryName'"></div>
+              <div class="mi-sort-desc" v-show="!sortOrder && sortSubmitted && sortName=='MaterialCategoryName'"></div>
+            </div>
             <div>
               <base-input-filter
               :column="'MaterialCategoryName'"
-              :listObjectFilter="listObjectFilter"
               @setObjectFilter="setObjectFilter"
               />
             </div>
           </th>
+          <!-- ĐVT chính -->
           <th>
-            <div class="m-th-name">ĐVT chính</div>
+            <div class="m-th-name m-flex-center" @click="onChangeSortObject('UnitName')">ĐVT chính
+              <div class="mi-sort-asc" v-show="sortOrder && sortSubmitted && sortName=='UnitName'"></div>
+              <div class="mi-sort-desc" v-show="!sortOrder && sortSubmitted && sortName=='UnitName'"></div>
+            </div>
             <div>
               <base-input-filter
               :column="'UnitName'"
@@ -41,8 +55,12 @@
               />
             </div>
           </th>
+          <!-- Nhóm nvl -->
           <th>
-            <div class="m-th-name">Nhóm nguyên vật liệu</div>
+            <div class="m-th-name m-flex-center" @click="onChangeSortObject('MaterialCategoryName')">Nhóm nguyên vật liệu
+              <div class="mi-sort-asc" v-show="sortOrder && sortSubmitted && sortName=='MaterialCategoryName'"></div>
+              <div class="mi-sort-desc" v-show="!sortOrder && sortSubmitted && sortName=='MaterialCategoryName'"></div>
+            </div>
             <div>
               <base-input-filter
               :column="'MaterialCategoryName'"
@@ -50,8 +68,12 @@
               />
             </div>
           </th>
+          <!-- Ghi chú -->
           <th>
-            <div class="m-th-name">Ghi chú</div>
+            <div class="m-th-name m-flex-center" @click="onChangeSortObject('Note')">Ghi chú
+              <div class="mi-sort-asc" v-show="sortOrder && sortSubmitted && sortName=='Note'"></div>
+              <div class="mi-sort-desc" v-show="!sortOrder && sortSubmitted && sortName=='Note'"></div>
+            </div>
             <div>
               <base-input-filter
               :column="'Note'"
@@ -59,6 +81,7 @@
               />
             </div>
           </th>
+          <!-- Theo dõi -->
           <th>
             <div class="m-th-name">Ngừng theo dõi</div>
             <div>
@@ -100,14 +123,19 @@ export default {
   },
   data() {
     return {
+      sortName: null,
+      /** Thứ tự hiển thị dữ liệu (true-asc; false-desc) */
+      sortOrder: false,
+      /** Ẩn/hiện icon */
+      sortSubmitted: false,
       /** Danh sách nhóm NVL */
       materialCategories:[],
       operators:[
         { Name: "*.", Show:"* : Chứa", Value: Enum.Operator.Contain },
-        { Name: "=.",Show: "= : Bằng", Value: Enum.Operator.EqualTo },
-        { Name: "+.",Show:"+ : Bắt đầu bằng", Value: Enum.Operator.BeginWith },
-        { Name: "-.",Show:"- : Kết thúc bằng", Value: Enum.Operator.EndWith },
-        { Name: "!.",Show:"! : Không chứa", Value: Enum.Operator.NotContain },
+        { Name: "=.", Show: "= : Bằng", Value: Enum.Operator.EqualTo },
+        { Name: "+.", Show:"+ : Bắt đầu bằng", Value: Enum.Operator.BeginWith },
+        { Name: "-.", Show:"- : Kết thúc bằng", Value: Enum.Operator.EndWith },
+        { Name: "!.", Show:"! : Không chứa", Value: Enum.Operator.NotContain },
       ],
     };
   },
@@ -126,7 +154,23 @@ export default {
      */
     setObjectFilter(object){
       this.$emit("setObjectFilter", object);
-    }
+    },
+    /**
+     * Khi click vào tiêu đề cột thì tạo mới một đối tượng sắp xếp
+     * Author: CTKimYen (23/1/2022)
+     */
+    onChangeSortObject(columnName) {
+      this.sortName = columnName;
+      console.log(columnName)
+      this.sortSubmitted = true;
+      this.sortOrder = !this.sortOrder;
+      this.objSort = {
+        Column: columnName,
+        Sort: this.sortOrder == true ? "ASC" : "DESC",
+      };
+      this.$emit("onChangeSortObject", this.objSort);
+    },
+
   },
 
 };

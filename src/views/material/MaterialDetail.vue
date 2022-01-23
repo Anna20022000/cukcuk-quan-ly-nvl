@@ -13,6 +13,7 @@
       <div class="m-modal-content">
         <!-- input nhập liệu NVL -->
         <div class="m-modal-group">
+          <!-- Tên -->
           <div class="m-modal-col-6 m-row m-pr-20">
             <div class="m-modal-col-3">Tên <span>(*)</span></div>
             <div class="m-modal-col-9">
@@ -34,6 +35,7 @@
               />
             </div>
           </div>
+          <!-- Mã -->
           <div class="m-modal-col-6 m-row">
             <div class="m-modal-col-3">Mã <span>(*)</span></div>
             <div class="m-modal-col-9">
@@ -55,6 +57,7 @@
           </div>
         </div>
         <div class="m-modal-group">
+          <!-- ĐVT -->
           <div class="m-modal-col-6 m-row">
             <div class="m-modal-col-3" v-tooltip.bottom="'Đơn vị tính'">
               ĐVT <span>(*)</span>
@@ -68,7 +71,6 @@
                 label="UnitName"
                 v-tooltip.bottom="{ content: submitted && $v.material.UnitId.$error  ? 'Trường này không được để trống.' : null,  }"
                 v-model="material.UnitId"
-                @input="unit = units.find(x=> x.UnitId == material.UnitId)"
                 :class="{
                   'm-is-invalid': submitted && $v.material.UnitId.$error,
                 }"
@@ -76,6 +78,7 @@
               <!-- END COMBOBOX -->
             </div>
           </div>
+          <!-- Kho -->
           <div class="m-modal-col-6 m-row">
             <div class="m-modal-col-3">Kho ngầm định</div>
             <div class="m-modal-col-9">
@@ -91,6 +94,7 @@
           </div>
         </div>
         <div class="m-modal-group">
+          <!-- HSD -->
           <div class="m-modal-col-6 m-row">
             <div class="m-modal-col-3">Hạn sử dụng</div>
             <div class="m-modal-col-9 m-row-inner">
@@ -108,6 +112,7 @@
               ></v-select>
             </div>
           </div>
+          <!-- Đơn vị thời gian -->
           <div class="m-modal-col-6 m-row">
             <div
               class="m-modal-col-3"
@@ -115,15 +120,12 @@
               SL tồn tối thiểu
             </div>
             <div class="m-modal-col-3">
-              <input
-                type="text"
-                class="m-input m-text-right"
-                v-mask="'###.###.###,00'"
-                v-model="material.Quantity"
-              />
+              <!-- <input type="text" class="m-input m-text-right" v-model="material.Quantity" /> -->
+              <money v-model="material.Quantity" v-bind="formatQuantity" class="m-input m-text-right"></money>
             </div>
           </div>
         </div>
+        <!-- Mô tả -->
         <div class="m-modal-group m-row m-textarea">
           <div class="m-modal-col-2">Mô tả</div>
           <div class="m-modal-col-10">
@@ -157,13 +159,11 @@
                     :reduce="(UnitName) => UnitName.UnitId"
                     label="UnitName"
                     v-model="conversion.UnitId"
+                    @input="messagePopup = duplicateUnit(conversion)"
                   ></v-select>
-                    <!-- @input="conversion.Description =`1 ${units.find(x=> x.UnitId == conversion.UnitId).UnitName} = ${conversion.ConversionRate} ${conversion.Calculation} ${unit.UnitName}`" -->
                 </td>
                 <td>
-                  <input type="text" class="m-input m-text-right" v-model="conversion.ConversionRate"
-                  />
-                    <!-- @change="conversion.Description =`1 ${units.find(x=> x.UnitId == conversion.UnitId).UnitName} = ${conversion.ConversionRate} ${conversion.Calculation} ${unit.UnitName}`" -->
+                  <money v-model="conversion.ConversionRate" v-bind="formatQuantity" class="m-input m-text-right"></money>
                 </td>
                 <td>
                   <v-select
@@ -172,16 +172,15 @@
                     label="Name"
                     v-model="conversion.Calculation"
                   ></v-select>
-                    <!-- @input="conversion.Description =`1 ${units.find(x=> x.UnitId == conversion.UnitId).UnitName} = ${conversion.ConversionRate} ${conversion.Calculation} ${unit.UnitName}`" -->
                 </td>
                 <td>
-                  <input type="text" class="m-input" v-model="conversion.Description"
-                  />
+                  <input readonly type="text" class="m-input" :value="description(conversion)" />
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
+        <!-- Thêm và xóa dòng -->
         <div class="m-end-tab">
           <button class="m-btn m-btn-icon m-mr-5" @click="btnAddLineOnClick">
             <i class="mi mi-16 mi-new m-mr-8"></i>
@@ -193,6 +192,7 @@
           </button>
         </div>
       </div>
+      <!-- Các button -->
       <div class="m-modal-footer">
         <div class="m-footer-left">
           <button class="m-btn m-btn-icon">
@@ -227,12 +227,14 @@ import MaterialApi from "@/apis/materialApi.js";
 import UnitApi from "@/apis/unitApi.js";
 import WarehouseApi from "@/apis/warehouseApi.js";
 import Enum from "@/commons/enums.js";
-
+import {Money} from 'v-money'
 
 export default {
   props: ["isShow", "material", "materialId", "mode"],
+  comments:{ Money },
   data() {
     return {
+      messagePopup:null,
       /** Một đối tượng Đơn vị chuyển đổi */
       conversion: {
         ConversionId: null,
@@ -243,6 +245,7 @@ export default {
         UnitName: null,
         State: 0,
       },
+      /** Vị trí của đvcđ được chọn */
       conversionIndex: null,
       /** Mảng chứa danh sách ĐVCĐ của đối tượng */
       conversions: [],
@@ -258,11 +261,6 @@ export default {
       },
       /** Danh sách các Kho */
       warehouses: [],
-      /** Thông tin kho */
-      warehouse: {
-        WarehouseId: null,
-        WarehouseName: null,
-      },
       /** Danh sách các phép tính */
       calculations: [
         { Name: "* - Nhân", Value: "*" },
@@ -270,8 +268,81 @@ export default {
       ],
       /** Đơn vị thời gian */
       timeUnits: ["Ngày", "Tháng", "Năm"],
+      /** định dạng số có phần đuôi ,00 */
+      formatQuantity: {
+        decimal: ',',
+        thousands: '.',
+        precision: 2,
+        masked: false
+      },
+      objectPopup:{
+        /** chế độ ẩn/hiện popup (true-hiện; false-ẩn) */
+        IsShowPopup: false,
+        /** Câu cảnh báo lỗi */
+        Message: "Đơn vị chuyển đổi không được trùng với đơn vị tính chính.",
+        /** Trạng thái hiển thị của popup */
+        PopupStatus: 1,
+      }
     };
   },
+  computed:{
+    /**
+     * Cập nhật mô tả cho đơn vị chuyển đổi
+     * Author: CTKimYen (24/1/2022)
+     */
+    description: function() {
+      const material = this.material;
+      const units = this.units;
+      const unitName = units.find(u => u.UnitId == material.UnitId)?.UnitName ?? '';
+      return function(conversion) {
+        let description = '';
+        if (unitName && conversion.UnitId && conversion.ConversionRate && conversion.Calculation) {
+          // Lấy ra tên của đvcđ được chọn
+          const conversionUnitName = units.find(u => u.UnitId == conversion.UnitId)?.UnitName ?? '';
+          // Nếu phép tính là nhân
+          if (conversion.Calculation == '*') {
+            description = `1 ${conversionUnitName} = ${conversion.ConversionRate} * ${unitName}`;
+          } else { // Phép tính là chia
+            description  = `1 ${conversionUnitName} = 1/${conversion.ConversionRate} ${unitName}`;
+          }
+        }
+        return description;
+      }
+    },
+    /**
+     * Check trùng đơn vị tính
+     * Author: CTKimYen (24/1/2022)
+     */
+    duplicateUnit: function() {
+      const materialId = this.material.UnitId;
+      const units = this.material.Conversions;
+      return function(conversion) {
+        let me = this;
+        if (materialId && conversion.UnitId) {
+          // Nếu material có đvt trùng với đvt của đvcđ
+          if (materialId == conversion.UnitId) {
+            conversion.UnitId = null;
+            me.objectPopup = {
+              IsShowPopup : true,
+              Message : "Đơn vị chuyển đổi không được trùng với đơn vị tính chính.",
+              PopupStatus: 1,
+            };
+          }
+          // Nếu ds đvcđ có đvt trùng nhau
+          else if(units.filter(u=> u.UnitId == conversion.UnitId).length > 1) {
+            conversion.UnitId = null;
+            me.objectPopup = {
+              IsShowPopup : true,
+              Message : "Đơn vị chuyển đổi không được trùng nhau.",
+              PopupStatus: 1,
+            };
+          }
+        }
+        return me.objectPopup;
+      }
+    },
+  },
+
   /**
    * Validate dữ liệu
    * Author: CTKimYen (22/1/2022)
@@ -311,18 +382,21 @@ export default {
       // Lấy ra id của DVT chính
       let materialUnit = me.material.UnitId;
       let listConversionValid = [];
+      let listCons = me.material.Conversions;
       // Kiểm tra trùng Đơn vị tính
-      me.material.Conversions.forEach((element) => {
+      listCons.forEach((element) => {
         // Nếu ĐVT chính = ĐVCĐ
         if (materialUnit == element.UnitId) {
+          // Hiển thị popup cảnh báo
+          me.$emit("showPopup", true);
           console.log("Đơn vị chuyển đổi không trùng với đơn vị tính chính.");
-          return;
+          return false;
         }
         // Nếu ĐVCĐ trùng nhau
-        if (listConversionValid.includes(element.UnitId)) {
+        else if (listConversionValid.includes(element.UnitId)) {
           element.UnitId = "";
           console.log("Đơn vị chuyển đổi không được trùng nhau");
-          return;
+          return false;
         }
         // Nếu hợp lệ thì thêm vào list id hợp lệ
         listConversionValid.push(element.UnitId);
@@ -361,18 +435,30 @@ export default {
       }
     },
     /**
-     * Thực hiện lưu thông tin NVL
+     * Gán lại một số giá trị cho phù hợp với kiểu dữ liệu gửi về
      * Author: CTKimYen (21/1/2022)
      */
-    async create(entity) {
+    mappingValue(entity){
       try {
         if (entity.WarehouseId == "") entity.WarehouseId = null;
         if (entity.MaterialCategoryId == "") entity.MaterialCategoryId = null;
         entity.Conversions.forEach((element) => {
           element.ConversionRate = Number.parseInt(element.ConversionRate);
         });
-
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    /**
+     * Thực hiện lưu thông tin NVL
+     * Author: CTKimYen (21/1/2022)
+     */
+    async create(entity) {
+      try {
         let me = this;
+        // map giá trị
+        me.mappingValue(entity);
+        // Thực hiện thêm
         await MaterialApi.create(entity)
           .then(function () {
             me.$emit("getAllData");
@@ -471,7 +557,7 @@ export default {
     btnRemoveLineOnClick() {
       try {
         let me = this;
-        // Ẩn hàng được chọn
+        // xóa hàng được chọn khỏi ds đvcđ của nvl
         me.material.Conversions.splice(me.conversionIndex, 1);
         // lấy ra đối tượng được chọn
         let entityDel = me.conversion;
@@ -535,17 +621,6 @@ export default {
           console.log(e);
         });
     },
-    /**
-     * Thực hiện cập nhật thông tin Mô tả của đơn vị chuyển đổi
-     * Author: CTKimYen (22/1/2022)
-     */
-    updateConversion(entity) {
-      let me = this;
-      let ok = this.checkMatchUnit();
-      if (ok)
-        entity.Description =`1 ${me.unit.UnitName} = ${entity.ConversionRate} ${entity.Calculation} ${entity.UnitName}`;
-      // else entity.UnitId = null;
-    },
 
   },
   /**
@@ -568,8 +643,11 @@ export default {
         this.$refs.txtMaterialName.focus();
       }, 10);
     },
-
-  },
+    objectPopup(){
+      this.$emit("showPopup", this.objectPopup);
+    }
+  }
+  
 };
 </script>
 

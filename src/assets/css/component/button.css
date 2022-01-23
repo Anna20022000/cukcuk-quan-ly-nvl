@@ -1,12 +1,14 @@
 .m-btn{
     background-color: #fcfcfc;
-    height: 28px;
+    height: 24px;
     color: #000;
     font-weight: normal;
     padding: 3px 10px;
     text-align: center;
     outline: unset;
     border: 1px solid #ccc;
+    background-color: #e5e5e5;
+    font-size: 12px;
     cursor: pointer;
     /* border-radius: 2px; */
     box-sizing: border-box;
@@ -30,4 +32,8 @@
 .m-toolbar .m-btn:hover{
     background-color: #fff !important;
     border-color:#0072BC !important;
+}
+
+.m-popup .m-btn{
+    min-width: 67px;
 }

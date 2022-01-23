@@ -1,104 +1,130 @@
-.mi{
-    background: url(../../resource/IconSprite.png) no-repeat;
-    cursor: pointer;
+.mi {
+  background: url(../../resource/IconSprite.png) no-repeat;
+  cursor: pointer;
 }
-.mi-24{
-    width: 24px;
-    height: 24px;
-    min-width: 24px;
-    min-height: 24px;
-    margin-right: 8px;
+.mi-24 {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  margin-right: 8px;
 }
 .mi-16 {
-    width: 16px;
-    height: 16px;
-    min-width: 16px;
-    min-height: 16px;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
 }
-.mi-14{
-    width: 14px;
-    height: 14px;
-    min-width: 14px;
-    min-height: 14px;
+.mi-14 {
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  min-height: 14px;
 }
-.mi-new{
-    background-position: 0 -2648px;
+.mi-32 {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
 }
-.mi-duplicate{
-    background-position: 0 -1888px;
+.mi-new {
+  background-position: 0 -2648px;
 }
-.mi-update{
-    background: url('../../resource/Edit16.png') no-repeat !important;
+.mi-duplicate {
+  background-position: 0 -1888px;
 }
-.mi-delete{
-    background-position: 0 -2680px;
+.mi-update {
+  background: url("../../resource/Edit16.png") no-repeat !important;
 }
-.mi-refresh{
-    background-position: 0 -2584px!important;
+.mi-delete {
+  background-position: 0 -2680px;
+}
+.mi-refresh {
+  background-position: 0 -2584px !important;
 }
 .mi-chevron-down {
-    background: #fff url('../../resource/default-small-arrow.png') no-repeat;
-    background-position: 0 center;
+  background: #fff url("../../resource/default-small-arrow.png") no-repeat;
+  background-position: 0 center;
 }
-.mi-sidebar-material{
-    background-image: url('../../resource/vector-smart-object.png');
+.mi-sidebar-material {
+  background-image: url("../../resource/vector-smart-object.png");
 }
-.m-account-image{
-    width: 28px;
-    height: 28px;
-    background: url('../../resource/EmployeeImage.png') no-repeat;
-    background-color: #fff;
-    background-position: 2px 1px;
-    border-radius: 50%;
+.m-account-image {
+  width: 28px;
+  height: 28px;
+  background: url("../../resource/EmployeeImage.png") no-repeat;
+  background-color: #fff;
+  background-position: 2px 1px;
+  border-radius: 50%;
 }
-.mi-speaker{
-    background-image: url('../../resource/speaker.png');
+.mi-speaker {
+  background-image: url("../../resource/speaker.png");
 }
-.mi-close{
-    background-image: url('../../resource/tool-sprites.png') !important;
-    background-position: 0 0;
-    background-color: transparent!important;
-    cursor: pointer;
+.mi-close {
+  background-image: url("../../resource/tool-sprites.png") !important;
+  background-position: 0 0;
+  background-color: transparent !important;
+  cursor: pointer;
 }
-.mi-help{
-    background-position: 0 -1600px!important;
+.mi-help {
+  background-position: 0 -1600px !important;
 }
-.mi-save{
-    background-image: url(../../resource/Save16.png);
+.mi-save {
+  background-image: url(../../resource/Save16.png);
 }
-.mi-save-add{
-    background-image: url(../../resource/SaveAdd16.png);
+.mi-save-add {
+  background-image: url(../../resource/SaveAdd16.png);
 }
-.mi-cancel{
-    background-image: url(../../resource/Disable16.png);
+.mi-cancel {
+  background-image: url(../../resource/Disable16.png);
 }
-.mi-page-first{
-    background-image: url(../../resource/page-first.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+.mi-page-first {
+  background-image: url(../../resource/page-first.png);
+  background-repeat: no-repeat;
+  background-position: 2px 2px;
 }
-.mi-page-pre{
-    background-image: url(../../resource/page-prev.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+.mi-page-pre {
+  background-image: url(../../resource/page-prev.png);
+  background-repeat: no-repeat;
+  background-position: 2px 2px;
 }
-.mi-page-next{
-    background-image: url(../../resource/page-next.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+.mi-page-next {
+  background-image: url(../../resource/page-next.png);
+  background-repeat: no-repeat;
+  background-position: 2px 2px;
 }
-.mi-page-last{
-    background-image: url(../../resource/page-last.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+.mi-page-last {
+  background-image: url(../../resource/page-last.png);
+  background-repeat: no-repeat;
+  background-position: 2px 2px;
 }
-.mi-page-refresh{
-    background-image: url(../../resource/refresh.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+.mi-page-refresh {
+  background-image: url(../../resource/refresh.png);
+  background-repeat: no-repeat;
+  background-position: 2px 2px;
 }
-.mi-dropdown{
-    background: url(../../resource/trigger_gray.png) no-repeat;
-    background-position: 0 center;
-    width: 16px;
+.mi-dropdown {
+  background: url(../../resource/trigger_gray.png) no-repeat;
+  background-position: 0 center;
+  width: 16px;
+}
+.mi-warning {
+  background: url(../../resource/icon-warning.png) no-repeat;
+}
+.mi-question {
+  background: url(../../resource/icon-question.png) no-repeat;
+}
+.mi-sort-asc {
+  background: url("../../resource/sort_asc.png") no-repeat;
+  width: 14px;
+  height: 14px;
+}
+.mi-sort-desc {
+  background: url("../../resource/sort_desc.png") no-repeat;
+  width: 14px;
+  height: 14px;
+}
+.m-flex-center {
+  display: flex;
+  justify-content: center;
 }

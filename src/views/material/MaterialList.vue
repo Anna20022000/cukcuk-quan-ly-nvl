@@ -23,12 +23,15 @@
         Nạp
       </button>
     </div>
-    <!-- grid -->
-    <material-list-grid :materials="materials"
-    :materialId="materialId"
-    @onClickRowActive="onClickRowActive"
-    @setObjectFilter="setObjectFilter"
+    <!-- GRID -->
+    <material-list-grid
+      :materials="materials"
+      :materialId="materialId"
+      @onClickRowActive="onClickRowActive"
+      @setObjectFilter="setObjectFilter"
+      @onChangeSortObject="onChangeSortObject"
     ></material-list-grid>
+    <!-- end Table Grid -->
   </div>
 </template>
 <script>
@@ -43,38 +46,58 @@ export default {
   components: {
     MaterialListGrid,
   },
-  data() {
-    return {
-    };
-  },
   methods: {
+    /**
+     * Khi thay đổi đối tượng sắp xếp
+     * Author: CTKimYen (23/1/2022)
+     */
+    onChangeSortObject(objSort) {
+      this.$emit("onChangeSortObject", objSort);
+    },
     /**
      * Khi click button Thêm
      * Author: CTKimYen (20/1/2022)
      */
     async btnAddOnClick() {
       await this.$emit("resetForm");
-      this.$emit("editFormMode", Enum.FormMode.Add)
+      this.$emit("editFormMode", Enum.FormMode.Add);
       this.$emit("showModal", true);
     },
     /**
      * Khi click button Nhân bản
      * Author: CTKimYen (20/1/2022)
      */
-    btnDupOnClick(){
-      this.$emit("editFormMode", Enum.FormMode.Duplicate)
-
+    btnDupOnClick() {
       let me = this;
+      me.$emit("editFormMode", Enum.FormMode.Add);
       // set mã code mới
-        me.getNewMaterialCode(me.material.MaterialName);
+      me.getNewMaterialCode(me.material.MaterialName);
       // Lấy ra bản ghi hiện tại
       MaterialApi.getSingle(me.materialId)
-      .then(function (res) {
-        // gán thông tin NVL lấy được cho material
-        me.$emit("getSingle", res.data);
-        
-        // Show modal detail
-        me.$emit("showModal", true);
+        .then(function (res) {
+          // gán thông tin NVL lấy được cho material bỏ trường Khóa chính
+          let obj = {
+            MaterialCode: res.data.MaterialCode,
+            MaterialName: res.data.MaterialName,
+            Note: res.data.Note,
+            Expiry: res.data.Expiry,
+            TimeUnit: res.data.TimeUnit,
+            Quantity: res.data.Quantity,
+            IsFollow: res.data.IsFollow,
+            UnitId: res.data.UnitId,
+            UnitName: res.data.UnitName,
+            WarehouseId: res.data.WarehouseId,
+            MaterialCategoryId: res.data.MaterialCategoryId,
+            MaterialCategoryName: res.data.MaterialCategoryName,
+            Conversions: res.data.Conversions,
+          };
+          obj.Conversions.forEach((con) => {
+            con.ConversionId = null;
+          });
+
+          me.$emit("getSingle", obj);
+          // Show modal detail
+          me.$emit("showModal", true);
         })
         .catch(function (e) {
           console.log(e);
@@ -84,16 +107,16 @@ export default {
      * Khi click button Sửa
      * Author: CTKimYen (20/1/2022)
      */
-    btnUpdateOnClick(){
-      this.$emit("editFormMode", Enum.FormMode.Update)
+    btnUpdateOnClick() {
+      this.$emit("editFormMode", Enum.FormMode.Update);
       let me = this;
       // Lấy ra bản ghi hiện tại
       MaterialApi.getSingle(me.materialId)
-      .then(function (res) {
-        // gán thông tin NVL lấy được cho material
-        me.$emit("getSingle", res.data);
-        // Show modal detail
-        me.$emit("showModal", true);
+        .then(function (res) {
+          // gán thông tin NVL lấy được cho material
+          me.$emit("getSingle", res.data);
+          // Show modal detail
+          me.$emit("showModal", true);
         })
         .catch(function (e) {
           console.log(e);
@@ -103,23 +126,23 @@ export default {
      * Khi click button Xóa
      * Author: CTKimYen (20/1/2022)
      */
-    btnDelOnClick(){
+    btnDelOnClick() {
       let me = this;
-     if(confirm("Bạn thực sự muốn xóa bản ghi này?")){
+      if (confirm("Bạn thực sự muốn xóa bản ghi này?")) {
         MaterialApi.delete(this.materialId)
-        .then(function () {
-        me.$emit("getAllData");
-        })
-        .catch(function (e) {
-          console.log(e);
-        });
+          .then(function () {
+            me.$emit("getAllData");
+          })
+          .catch(function (e) {
+            console.log(e);
+          });
       }
     },
     /**
      * Khi click button Nạp
      * Author: CTKimYen (20/1/2022)
      */
-    btnRefreshOnClick(){
+    btnRefreshOnClick() {
       this.$emit("getAllData");
     },
     /**
@@ -147,9 +170,9 @@ export default {
      * Thiết lập giá trị cho danh sách lọc
      * Author: CTKimYen (23/1/2022)
      */
-    setObjectFilter(object){
+    setObjectFilter(object) {
       this.$emit("setObjectFilter", object);
-    }
+    },
   },
 };
 </script>

@@ -25,7 +25,7 @@ let Enum = {
         /** Sửa */
         Update: 1,
         /** Nhân bản */
-        Duplicate: 3
+        // Duplicate: 3
     },
     /**
      * Trạng thái cất
