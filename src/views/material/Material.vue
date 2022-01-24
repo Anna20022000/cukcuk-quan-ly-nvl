@@ -47,7 +47,6 @@
       :materialId="materialId"
       :isShow="isShowModal"
       :mode="formMode"
-      :objectPopup="objectPopup"
       @showModal="showModal"
       @resetForm="resetFormData"
       @editFormMode="editFormMode"
@@ -223,6 +222,7 @@ export default {
           me.totalPage = response.data.TotalPage;
           me.totalRecord = response.data.TotalRecord;
           this.materialId = this.materials[0].MaterialId;
+          this.material = this.materials[0];
         })
         .catch((e) => {
           console.log(e);

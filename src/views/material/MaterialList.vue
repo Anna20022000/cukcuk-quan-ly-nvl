@@ -39,8 +39,6 @@ import MaterialListGrid from "./MaterialListGrid";
 import Enum from "@/commons/enums.js";
 import MaterialApi from "@/apis/materialApi.js";
 
-// import { eventBus } from "../../main";
-
 export default {
   props: ["materials", "mode", "materialId", "material"],
   components: {
@@ -128,7 +126,7 @@ export default {
      */
     btnDelOnClick() {
       let me = this;
-      if (confirm("Bạn thực sự muốn xóa bản ghi này?")) {
+      if (confirm("Bạn có chắc chắn muốn xóa nguyên vật liệu <<"+ me.material.MaterialName +">> không?")) {
         MaterialApi.delete(this.materialId)
           .then(function () {
             me.$emit("getAllData");

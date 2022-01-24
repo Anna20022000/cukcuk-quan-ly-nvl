@@ -1,25 +1,23 @@
 <template>
-  <div class="m-popup" :class="{ 'm-popup-show': isShowPopup }">
-    <div class="m-popup-title">CUKCUK - Quản lý nhà hàng</div>
-    <div class="m-popup-content">
-      <div class="m-flex">
-        <!-- ICON DEPEND popupStatus -->
-        <div class="mi mi-32 mi-warning" v-if="popupStatus == 1"></div>
-        <div class="mi mi-32 mi-question" v-if="popupStatus == 2"></div>
-        <div
-          class="mi mi-32 mi-warning"
-          v-if="popupStatus == 2 || popupStatus == 3"
-        ></div>
-        <div class="m-popup-messenger">{{ message }}</div>
-      </div>
-    </div>
-    <!-- ERROR -->
-    <div class="m-popup-bottom m-flex-right" v-if="popupStatus == 1">
-      <button class="m-btn" @click="closePopup()">Đồng ý</button>
-    </div>
+  <div style="display:none" :class="{ 'm-modal-show': isShowPopup }">
+    <div class="m-popup">
+      <div class="m-popup-title">CUKCUK - Quản lý nhà hàng</div>
+      <div class="m-popup-content">
+        <div class="m-flex">
+          <!-- ICON DEPEND popupStatus -->
+          <div class="mi mi-32 mi-warning" v-if="popupStatus == 1 || popupStatus == 2"></div>
+          <div class="mi mi-32 mi-question" v-if="popupStatus == 3"></div>
 
-    <!-- QUESTION: DATA CHANGE -->
-    <!-- <div class="m-popup-bottom m-flex" v-if="popupStatus == 1">
+          <div class="m-popup-messenger">{{ message }}</div>
+        </div>
+      </div>
+      <!-- ERROR -->
+      <div class="m-popup-bottom m-flex-right" v-if="popupStatus == 1">
+        <button class="m-btn" @click="closePopup()">Đồng ý</button>
+      </div>
+
+      <!-- QUESTION: DATA CHANGE -->
+      <!-- <div class="m-popup-bottom m-flex" v-if="popupStatus == 1">
         <button class="m-btn m-btn-outline" @click="closePopup()">Hủy</button>
         <div>
           <button class="m-btn m-btn-outline mr-10" @click="btnNoOnclick()">
@@ -29,16 +27,17 @@
         </div>
       </div> -->
 
-    <!-- DELETE SINGLE -->
-    <!-- <div class="m-popup-bottom m-flex" v-if="popupStatus == 2">
+      <!-- DELETE SINGLE -->
+      <!-- <div class="m-popup-bottom m-flex" v-if="popupStatus == 2">
         <button class="m-btn m-btn-outline" @click="closePopupDel()">
           Không
         </button>
         <button class="m-btn" @click="confirmDel()">Có</button>
       </div> -->
+    </div>
 
     <!-- background -->
-    <div class="m-background-modal m-modal-backUp"></div>
+    <div class="m-popup-background"></div>
   </div>
 </template>
 
@@ -52,12 +51,12 @@ export default {
       isShowPopup: false,
     };
   },
-  watch:{
-    objectPopup(){
+  watch: {
+    objectPopup() {
       this.popupStatus = this.objectPopup.PopupStatus;
       this.message = this.objectPopup.Message;
       this.isShowPopup = this.objectPopup.IsShowPopup;
-    }
+    },
   },
   methods: {
     /**
@@ -65,7 +64,7 @@ export default {
      * Author: CTKimYen (24/1/2022)
      */
     closePopup() {
-        this.$emit("showPopup", false);
+      this.$emit("showPopup", false);
     },
     /**
      * when click button NO in popup Question

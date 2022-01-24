@@ -186,7 +186,8 @@
             <i class="mi mi-16 mi-new m-mr-8"></i>
             Thêm dòng
           </button>
-          <button class="m-btn m-btn-icon" @click="btnRemoveLineOnClick">
+          <button class="m-btn m-btn-icon" @click="btnRemoveLineOnClick" 
+          :class="{'m-disable': material.Conversions == null || material.Conversions.length <1 || conversionIndex <0 }">
             <i class="mi mi-16 mi-delete m-mr-8"></i>
             Xóa dòng
           </button>
@@ -234,7 +235,8 @@ export default {
   comments:{ Money },
   data() {
     return {
-      messagePopup:null,
+      isError: false,
+      // title: null,
       /** Một đối tượng Đơn vị chuyển đổi */
       conversion: {
         ConversionId: null,
@@ -245,8 +247,8 @@ export default {
         UnitName: null,
         State: 0,
       },
-      /** Vị trí của đvcđ được chọn */
-      conversionIndex: null,
+      /** Vị trí của đvcđ vừa chọn */
+      conversionIndex: -1,
       /** Mảng chứa danh sách ĐVCĐ của đối tượng */
       conversions: [],
       /** Trạng thái form submit */
@@ -374,36 +376,6 @@ export default {
       this.resetForm();
     },
     /**
-     * Thực hiện kiểm tra ĐVT chính có trùng với ĐVCĐ hoặc các ĐVCĐ có trùng nhau không
-     * Author: CTKimYen (22/1/2022)
-     */
-    checkMatchUnit() {
-      let me = this;
-      // Lấy ra id của DVT chính
-      let materialUnit = me.material.UnitId;
-      let listConversionValid = [];
-      let listCons = me.material.Conversions;
-      // Kiểm tra trùng Đơn vị tính
-      listCons.forEach((element) => {
-        // Nếu ĐVT chính = ĐVCĐ
-        if (materialUnit == element.UnitId) {
-          // Hiển thị popup cảnh báo
-          me.$emit("showPopup", true);
-          console.log("Đơn vị chuyển đổi không trùng với đơn vị tính chính.");
-          return false;
-        }
-        // Nếu ĐVCĐ trùng nhau
-        else if (listConversionValid.includes(element.UnitId)) {
-          element.UnitId = "";
-          console.log("Đơn vị chuyển đổi không được trùng nhau");
-          return false;
-        }
-        // Nếu hợp lệ thì thêm vào list id hợp lệ
-        listConversionValid.push(element.UnitId);
-      });
-      return true;
-    },
-    /**
      * Khi click vào button Cất trên form chi tiết
      * Author: CTKimYen (22/1/2022)
      */
@@ -412,19 +384,43 @@ export default {
         this.submitted = true;
         this.$v.$touch();
         let me = this;
-        let ok = await me.checkMatchUnit();
         // Nếu form error
-        if (me.$v.$invalid || !ok) {
+        if (me.$v.$invalid) {
           // stop here if form is invalid
           return;
         }
+        else{ // kiểm tra đơn vị chuyển đổi nhập trống
+          let con = me.material.Conversions.filter(c=>c.UnitId == null);
+          if(con.length > 0){
+              me.objectPopup = {
+                IsShowPopup : true,
+                Message : "Đơn vị chuyển đổi không được để trống.",
+                PopupStatus: 1,
+              };
+              return;
+          }
+        }// map giá trị
+        me.mappingValue(me.material);
         // Kiểm tra trạng thái form
         if (me.mode == Enum.FormMode.Add) { // Thêm
           await me.create(me.material);
+          // Nếu có lỗi 400 hiển thị popup
+          if(me.isError) 
+            {
+              me.isError = false; 
+              return;
+            }
         } else if (me.mode == Enum.FormMode.Update) { // Sửa
           await me.update(me.materialId, me.material);
+          // Nếu có lỗi 400 hiển thị popup
+          if(me.isError) 
+            {
+              me.isError = false; 
+              return;
+            }
         }
         me.submitted = false;
+        me.resetConversions();
         // Kiểm tra thao tác lưu
         if (actionMode == Enum.ActionMode.Save) me.hideModal(); // Cất
         else { // Cất và thêm
@@ -456,19 +452,23 @@ export default {
     async create(entity) {
       try {
         let me = this;
-        // map giá trị
-        me.mappingValue(entity);
         // Thực hiện thêm
         await MaterialApi.create(entity)
           .then(function () {
             me.$emit("getAllData");
           })
           .catch(function (res) {
+            console.log(res);
             switch (res.response.status) {
               case 400: {
                 let data = res.response.data;
                 if (data) {
-                  console.log(data.data[0]);
+                  me.isError = true;
+                  me.objectPopup = {
+                  IsShowPopup : true,
+                  Message : data.data[0],
+                  PopupStatus: 1,
+                  };
                 }
                 break;
               }
@@ -501,14 +501,18 @@ export default {
       await MaterialApi.update(id, entity)
         .then(function () {
           me.$emit("getAllData");
-          me.resetConversions();
         })
         .catch(function (res) {
           switch (res.response.status) {
             case 400: {
               let data = res.response.data;
               if (data) {
-                console.log(data.data[0]);
+                me.isError = true;
+                  me.objectPopup = {
+                  IsShowPopup : true,
+                  Message : data.data[0],
+                  PopupStatus: 1,
+                  };
               }
               break;
             }
@@ -525,7 +529,7 @@ export default {
       let me = this;
       me.unit = null;
       me.conversion = null;
-      me.conversionIndex = null;
+      me.conversionIndex = -1;
       me.conversions = [];
     },
     /**
@@ -565,10 +569,12 @@ export default {
         if (entityDel.ConversionId != null) {
           entityDel.State = Enum.State.Delete;
           me.conversions.push(entityDel);
+          me.conversionIndex>=0?me.conversionIndex--:me.conversionIndex;
         }
         // Nếu đvcđ chưa tồn tại thì xóa trong mảng tạm conversions
         else {
           me.conversions.splice(me.conversionIndex, 1);
+          me.conversionIndex>=0?me.conversionIndex--:me.conversionIndex;
         }
       } catch (error) {
         console.log(error);
@@ -580,6 +586,7 @@ export default {
      */
     resetForm() {
       this.$emit("resetForm");
+      this.resetConversions();
     },
     /**
      * Thực hiện gọi api lấy mã NVL mới
@@ -622,6 +629,22 @@ export default {
         });
     },
 
+    /**
+     * When click button Cancel modal
+     * Author: KimYen (15/12/2021)
+     */
+    btnCancelOnclick() {
+      if (this.isFormError) {
+        this.submitted = false;
+        this.isFormError = false;
+      } else {
+        this.$emit("resetFormData");
+        this.$emit("showModal", false);
+        this.submitted = false;
+        this.formChanged = 0;
+      }
+    },
+
   },
   /**
    * Hook
@@ -645,6 +668,10 @@ export default {
     },
     objectPopup(){
       this.$emit("showPopup", this.objectPopup);
+    },
+    mode(){
+      if(this.mode == 0) console.log = "Thêm nguyên vật liệu";
+      if(this.mode == 1) console.log = "Sua nguyên vật liệu";
     }
   }
   

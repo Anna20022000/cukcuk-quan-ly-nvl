@@ -1,13 +1,12 @@
 /* popup delete */
 
 .m-popup {
-    display: none;
     position: absolute;
     background-color: #ffffff;
     width: 400px;
     height: 125px;
     right: auto;
-    left: 40%;
+    left: 50%;
     top: 40%;
     z-index: 39000;
     transform: translate(-50% , -50%);
@@ -50,7 +49,7 @@
     justify-content: flex-end;
 }
 .m-popup-background{
-    z-index: 99999999999;
+    z-index: 2000;
     position: fixed;
     top: 0;
     bottom: 0;
