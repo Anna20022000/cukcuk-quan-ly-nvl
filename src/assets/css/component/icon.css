@@ -66,6 +66,9 @@
   background-color: transparent !important;
   cursor: pointer;
 }
+.mi-error{
+  background: url(../../resource/error16.png) no-repeat;
+}
 .mi-help {
   background-position: 0 -1600px !important;
 }
@@ -124,7 +127,7 @@
   width: 14px;
   height: 14px;
 }
-.m-flex-center {
-  display: flex;
-  justify-content: center;
+div.mi-16.mi-error{
+  width: 26px;
+  background-position: 4px 0;
 }

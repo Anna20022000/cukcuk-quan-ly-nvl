@@ -2,7 +2,9 @@
   <div>
     <!-- toolbar -->
     <div class="m-toolbar">
-      <button class="m-btn m-btn-icon" @click="btnAddOnClick()">
+      <button class="m-btn m-btn-icon" @click="btnAddOnClick()"
+       v-shortkey="['ctrl', '1']" @shortkey="btnAddOnClick()"
+       title="Ctrl+1">
         <i class="mi mi-16 mi-new m-mr-5"></i>
         Thêm
       </button>
@@ -10,11 +12,15 @@
         <i class="mi mi-16 mi-duplicate m-mr-5"></i>
         Nhân bản
       </button>
-      <button class="m-btn m-btn-icon" @click="btnUpdateOnClick()">
+      <button class="m-btn m-btn-icon" @click="btnUpdateOnClick()"
+       v-shortkey="['ctrl', 'e']" @shortkey="btnUpdateOnClick()"
+       title="Ctrl+E">
         <i class="mi mi-16 mi-update m-mr-5"></i>
         Sửa
       </button>
-      <button class="m-btn m-btn-icon" @click="btnDelOnClick()">
+      <button class="m-btn m-btn-icon" @click="btnDelOnClick()"
+       v-shortkey="['ctrl', 'd']" @shortkey="btnDelOnClick()"
+       title="Ctrl+D">
         <i class="mi mi-16 mi-delete m-mr-5"></i>
         Xóa
       </button>
@@ -27,6 +33,7 @@
     <material-list-grid
       :materials="materials"
       :materialId="materialId"
+      :loading="loading"
       @onClickRowActive="onClickRowActive"
       @setObjectFilter="setObjectFilter"
       @onChangeSortObject="onChangeSortObject"
@@ -40,7 +47,7 @@ import Enum from "@/commons/enums.js";
 import MaterialApi from "@/apis/materialApi.js";
 
 export default {
-  props: ["materials", "mode", "materialId", "material"],
+  props: ["materials", "mode", "materialId", "material", "loading"],
   components: {
     MaterialListGrid,
   },
@@ -57,6 +64,23 @@ export default {
      * Author: CTKimYen (20/1/2022)
      */
     async btnAddOnClick() {
+      const obj = {
+        MaterialCode: "",
+        MaterialName: "",
+        Note: "",
+        Expiry: 0,
+        TimeUnit: null,
+        Quantity: 0,
+        IsFollow: 1,
+        UnitId: null,
+        UnitName: null,
+        WarehouseId: null,
+        MaterialCategoryId: null,
+        MaterialCategoryName: null,
+        Conversions: [],
+      };
+      // Gán giá trị ban đầu cho đối tượng trước khi thêm mới - dùng để so sánh sự thay đổi
+      this.$emit("setObjectOld", obj);
       await this.$emit("resetForm");
       this.$emit("editFormMode", Enum.FormMode.Add);
       this.$emit("showModal", true);
@@ -113,6 +137,8 @@ export default {
         .then(function (res) {
           // gán thông tin NVL lấy được cho material
           me.$emit("getSingle", res.data);
+          // Gán giá trị ban đầu của obj - dùng để ss sự thay đổi
+          me.$emit("setObjectOld", res.data);
           // Show modal detail
           me.$emit("showModal", true);
         })
@@ -126,7 +152,8 @@ export default {
      */
     btnDelOnClick() {
       let me = this;
-      if (confirm("Bạn có chắc chắn muốn xóa nguyên vật liệu <<"+ me.material.MaterialName +">> không?")) {
+      const materialCurrent = this.materials.find(m=>m.MaterialId == me.materialId);
+      if (confirm(`Bạn có chắc chắn muốn xóa nguyên vật liệu <<${materialCurrent.MaterialCode}-${materialCurrent.MaterialName}>> không?`)) {
         MaterialApi.delete(this.materialId)
           .then(function () {
             me.$emit("getAllData");
@@ -138,10 +165,11 @@ export default {
     },
     /**
      * Khi click button Nạp
+     * Chuyển về trang 1 và load lại dữ liệu
      * Author: CTKimYen (20/1/2022)
      */
     btnRefreshOnClick() {
-      this.$emit("getAllData");
+      this.$emit("onChangePageIndex", 1);
     },
     /**
      * Chọn 1 đối tượng

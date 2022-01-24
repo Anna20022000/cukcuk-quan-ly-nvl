@@ -7,7 +7,7 @@
     <div class="m-modal">
       <div class="m-modal-header">
         <div class="m-modal-title">Thêm nguyên vật liệu</div>
-        <div class="m-close-modal mi-16 mi-close" @click="hideModal"></div>
+        <div class="m-close-modal mi-16 mi-close" @click="btnCloseOnClick()" v-shortkey="['esc']" @shortkey="btnCloseOnClick()"></div>
       </div>
       <!-- <form> -->
       <div class="m-modal-content">
@@ -16,43 +16,42 @@
           <!-- Tên -->
           <div class="m-modal-col-6 m-row m-pr-20">
             <div class="m-modal-col-3">Tên <span>(*)</span></div>
-            <div class="m-modal-col-9">
-              <input
-                type="text"
+            <div class="m-modal-col-9 m-flex-between">
+              <input type="text"
                 class="m-input"
                 ref="txtMaterialName"
-                v-tooltip.bottom="{
-                  content:
-                    submitted && $v.material.MaterialName.$error
-                      ? 'Trường này không được để trống.'
-                      : null,
-                }"
                 v-model="material.MaterialName"
                 @change="getNewMaterialCode"
-                :class="{
-                  'm-is-invalid': submitted && $v.material.MaterialName.$error,
-                }"
+                :class="{ 'm-is-invalid': submitted && $v.material.MaterialName.$error, }"
               />
+              <div class="mi-16 mi-error"
+                v-show="submitted && $v.material.MaterialName.$error"
+                v-tooltip.bottom="{
+                  content: submitted && $v.material.MaterialName.$error
+                      ? 'Trường này không được để trống.'
+                      : null, }"
+              ></div>
             </div>
           </div>
           <!-- Mã -->
           <div class="m-modal-col-6 m-row">
             <div class="m-modal-col-3">Mã <span>(*)</span></div>
-            <div class="m-modal-col-9">
+            <div class="m-modal-col-9 m-flex-between">
               <input
                 type="text"
                 class="m-input"
-                v-tooltip.bottom="{
-                  content:
-                    submitted && $v.material.MaterialCode.$error
-                      ? 'Trường này không được để trống.'
-                      : null,
-                }"
                 v-model="material.MaterialCode"
                 :class="{
                   'm-is-invalid': submitted && $v.material.MaterialCode.$error,
                 }"
               />
+              <div class="mi-16 mi-error"
+                v-show="submitted && $v.material.MaterialCode.$error"
+                v-tooltip.bottom="{
+                  content: submitted && $v.material.MaterialCode.$error
+                      ? 'Trường này không được để trống.'
+                      : null, }"
+              ></div>
             </div>
           </div>
         </div>
@@ -62,20 +61,23 @@
             <div class="m-modal-col-3" v-tooltip.bottom="'Đơn vị tính'">
               ĐVT <span>(*)</span>
             </div>
-            <div class="m-modal-col-9 m-row-inner">
+            <div class="m-modal-col-9 m-row-inner m-flex-between">
               <!-- COMBOBOX -->
               <v-select
                 class="m-modal-col-6"
                 :options="units"
                 :reduce="(UnitName) => UnitName.UnitId"
                 label="UnitName"
-                v-tooltip.bottom="{ content: submitted && $v.material.UnitId.$error  ? 'Trường này không được để trống.' : null,  }"
                 v-model="material.UnitId"
                 :class="{
                   'm-is-invalid': submitted && $v.material.UnitId.$error,
                 }"
               ></v-select>
               <!-- END COMBOBOX -->
+              <div class="mi-16 mi-error"
+                v-show="submitted && $v.material.UnitId.$error"
+                v-tooltip.bottom="{ content: submitted && $v.material.UnitId.$error  ? 'Trường này không được để trống.' : null,  }"
+              ></div>
             </div>
           </div>
           <!-- Kho -->
@@ -182,11 +184,11 @@
         </div>
         <!-- Thêm và xóa dòng -->
         <div class="m-end-tab">
-          <button class="m-btn m-btn-icon m-mr-5" @click="btnAddLineOnClick">
+          <button class="m-btn m-btn-icon m-mr-5" @click="btnAddLineOnClick()" v-shortkey="['ctrl','insert']" @shortkey="btnAddLineOnClick()" title="Ctrl+Insert">
             <i class="mi mi-16 mi-new m-mr-8"></i>
             Thêm dòng
           </button>
-          <button class="m-btn m-btn-icon" @click="btnRemoveLineOnClick" 
+          <button class="m-btn m-btn-icon" @click="btnRemoveLineOnClick()" v-shortkey="['ctrl','del']" @shortkey="btnRemoveLineOnClick()" title="Ctrl+Delete" 
           :class="{'m-disable': material.Conversions == null || material.Conversions.length <1 || conversionIndex <0 }">
             <i class="mi mi-16 mi-delete m-mr-8"></i>
             Xóa dòng
@@ -202,15 +204,15 @@
           </button>
         </div>
         <div class="m-footer-right">
-          <button class="m-btn m-btn-icon m-mr-8" @click="btnSaveOnClick(0)">
+          <button class="m-btn m-btn-icon m-mr-8" @click="btnSaveOnClick(0)" v-shortkey="['ctrl', 's']" @shortkey="btnSaveOnClick(0)" title="Ctrl+S">
             <i class="mi-16 mi-save m-mr-8"></i>
             Cất
           </button>
-          <button class="m-btn m-btn-icon m-mr-8" @click="btnSaveOnClick(1)">
+          <button class="m-btn m-btn-icon m-mr-8" @click="btnSaveOnClick(1)" v-shortkey="['ctrl','shift', 's']" @shortkey="btnSaveOnClick(1)" title="Ctrl+Shift+S">
             <i class="mi-16 mi-save-add m-mr-8"></i>
             Cất và thêm
           </button>
-          <button class="m-btn m-btn-icon" @click="hideModal">
+          <button class="m-btn m-btn-icon" @click="hideModal()" v-shortkey="['ctrl','b']" @shortkey="hideModal()" title="Ctrl+B">
             <i class="mi-16 mi-cancel m-mr-8"></i>
             Hủy bỏ
           </button>
@@ -219,6 +221,15 @@
       <!-- </form> -->
     </div>
     <div class="modal-background"></div>
+    <!-- POPUP -->
+    <base-popup
+      :status="popupStatus"
+      :message="message"
+      :show="isShowPopup"
+      @btnYesWarning="hidePopup"
+      @btnCancelQuesion="hidePopup"
+    ></base-popup>
+    <!-- END POPUP -->
   </div>
 </template>
 
@@ -228,13 +239,19 @@ import MaterialApi from "@/apis/materialApi.js";
 import UnitApi from "@/apis/unitApi.js";
 import WarehouseApi from "@/apis/warehouseApi.js";
 import Enum from "@/commons/enums.js";
-import {Money} from 'v-money'
+import {Money} from 'v-money';
+import BasePopup from "../../components/BasePopup.vue";
+import _ from 'lodash';
 
 export default {
-  props: ["isShow", "material", "materialId", "mode"],
-  comments:{ Money },
+  props: ["isShow", "material", "materialId", "mode", "materialOld"],
+  components:{
+    BasePopup,
+    Money
+  },
   data() {
     return {
+      /** biến kiểm tra lỗi server */
       isError: false,
       // title: null,
       /** Một đối tượng Đơn vị chuyển đổi */
@@ -277,14 +294,12 @@ export default {
         precision: 2,
         masked: false
       },
-      objectPopup:{
-        /** chế độ ẩn/hiện popup (true-hiện; false-ẩn) */
-        IsShowPopup: false,
-        /** Câu cảnh báo lỗi */
-        Message: "Đơn vị chuyển đổi không được trùng với đơn vị tính chính.",
-        /** Trạng thái hiển thị của popup */
-        PopupStatus: 1,
-      }
+      /** Trạng thái của popup hiển thị */
+      popupStatus: "",
+      /** chế độ ẩn/hiện popup (true-hiện; false-ẩn) */
+      isShowPopup: false,
+      /** Câu cảnh báo lỗi trong popup*/
+      message: "",
     };
   },
   computed:{
@@ -324,23 +339,21 @@ export default {
           // Nếu material có đvt trùng với đvt của đvcđ
           if (materialId == conversion.UnitId) {
             conversion.UnitId = null;
-            me.objectPopup = {
-              IsShowPopup : true,
-              Message : "Đơn vị chuyển đổi không được trùng với đơn vị tính chính.",
-              PopupStatus: 1,
-            };
+            // Hien thi popup cnah bao
+            me.popupStatus = 'warning';
+            me.isShowPopup = true;
+            me.message = "Đơn vị chuyển đổi không được trùng với đơn vị tính chính.";
           }
           // Nếu ds đvcđ có đvt trùng nhau
           else if(units.filter(u=> u.UnitId == conversion.UnitId).length > 1) {
             conversion.UnitId = null;
-            me.objectPopup = {
-              IsShowPopup : true,
-              Message : "Đơn vị chuyển đổi không được trùng nhau.",
-              PopupStatus: 1,
-            };
+            // Hien thi popup canh bao
+            me.popupStatus = 'warning';
+            me.isShowPopup = true;
+            me.message = "Đơn vị chuyển đổi không được trùng nhau.";
           }
         }
-        return me.objectPopup;
+        return;
       }
     },
   },
@@ -358,6 +371,19 @@ export default {
     },
   },
   methods: {
+    btnCloseOnClick(){
+      // Nếu NVL ko bị thay đổi thì ẩn modal
+      if(_.isEqual(this.materialOld, this.material)){
+        alert('ko thay đổi')
+        this.hideModal();
+      }
+      else{
+        // nếu NVL bị thay đổi thì hiển thị popup question
+        this.isShowPopup = true;
+        this.popupStatus = "question";
+        this.message = "Dữ liệu đã thay đổi, bạn có muốn cất không?";
+      }
+    },
     /**
      * Khi click vào một đvcđ lấy ra index và đvcđ đó
      * Author: CTKimYen (22/1/2022)
@@ -392,11 +418,10 @@ export default {
         else{ // kiểm tra đơn vị chuyển đổi nhập trống
           let con = me.material.Conversions.filter(c=>c.UnitId == null);
           if(con.length > 0){
-              me.objectPopup = {
-                IsShowPopup : true,
-                Message : "Đơn vị chuyển đổi không được để trống.",
-                PopupStatus: 1,
-              };
+              // Hien thi popup
+              me.isShowPopup = true;
+              me.popupStatus = 'warning';
+              me.message = "Đơn vị chuyển đổi không được để trống.";
               return;
           }
         }// map giá trị
@@ -463,12 +488,12 @@ export default {
               case 400: {
                 let data = res.response.data;
                 if (data) {
+                  // Đánh dấu form nhập liệu có lỗi
                   me.isError = true;
-                  me.objectPopup = {
-                  IsShowPopup : true,
-                  Message : data.data[0],
-                  PopupStatus: 1,
-                  };
+                  // Hien thi popup canh bao
+                  me.popupStatus = 'warning';
+                  me.isShowPopup = true;
+                  me.message = data.data[0];
                 }
                 break;
               }
@@ -508,11 +533,10 @@ export default {
               let data = res.response.data;
               if (data) {
                 me.isError = true;
-                  me.objectPopup = {
-                  IsShowPopup : true,
-                  Message : data.data[0],
-                  PopupStatus: 1,
-                  };
+                // Hiển thị popup cảnh báo
+                  me.popupStatus = 'warning';
+                  me.isShowPopup = true;
+                  me.message = data.data[0];
               }
               break;
             }
@@ -584,7 +608,7 @@ export default {
      * reset form chi tiết
      * Author: CTKimYen (21/1/2022)
      */
-    resetForm() {
+   resetForm() {
       this.$emit("resetForm");
       this.resetConversions();
     },
@@ -628,7 +652,6 @@ export default {
           console.log(e);
         });
     },
-
     /**
      * When click button Cancel modal
      * Author: KimYen (15/12/2021)
@@ -644,6 +667,9 @@ export default {
         this.formChanged = 0;
       }
     },
+    hidePopup(){
+      this.isShowPopup= false;
+    }
 
   },
   /**
@@ -665,9 +691,6 @@ export default {
       setTimeout(() => {
         this.$refs.txtMaterialName.focus();
       }, 10);
-    },
-    objectPopup(){
-      this.$emit("showPopup", this.objectPopup);
     },
     mode(){
       if(this.mode == 0) console.log = "Thêm nguyên vật liệu";

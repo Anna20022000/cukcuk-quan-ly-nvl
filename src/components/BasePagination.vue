@@ -43,7 +43,7 @@
           :class="{ 'm-disable': pageIndex == totalPage }"
         ></div>
         <div class="m-text-paging">|</div>
-        <div class="mi-16 mi-page-refresh"></div>
+        <div class="mi-16 mi-page-refresh" @click="onChangePageIndex()"></div>
         <div class="m-text-paging">|</div>
       </div>
       <div class="m-chosse-size m-flex-item-center" 

@@ -19,6 +19,7 @@
         :material="material"
         :materialId="materialId"
         :mode="formMode"
+        :loading="loading"
         @showModal="showModal"
         @resetForm="resetFormData"
         @editFormMode="editFormMode"
@@ -27,6 +28,8 @@
         @onClickRowActive="onClickRowActive"
         @setObjectFilter="setObjectFilter"
         @onChangeSortObject="onChangeSortObject"
+        @onChangePageIndex="onChangePageIndex"
+        @setObjectOld="setObjectOld"
       ></material-list>
     </div>
     <!-- paginate -->
@@ -44,6 +47,7 @@
     <!-- detail -->
     <material-detail
       :material="material"
+      :materialOld="materialOld"
       :materialId="materialId"
       :isShow="isShowModal"
       :mode="formMode"
@@ -51,14 +55,7 @@
       @resetForm="resetFormData"
       @editFormMode="editFormMode"
       @getAllData="getAllData"
-      @showPopup="showPopup"
     ></material-detail>
-    <!-- POPUP -->
-    <base-popup
-      :objectPopup="objectPopup"
-      @showPopup="showPopup"
-    />
-    <!-- END POPUP -->
   </div>
 </template>
 <script>
@@ -66,27 +63,27 @@ import MaterialApi from "@/apis/materialApi.js";
 import MaterialList from "./MaterialList.vue";
 import MaterialDetail from "./MaterialDetail.vue";
 import BasePagination from "../../components/BasePagination.vue";
-import BasePopup from "../../components/BasePopup.vue";
 import Enum from "@/commons/enums.js";
 
 export default {
   components: {
     MaterialList,
     MaterialDetail,
-    BasePagination,
-    BasePopup,
+    BasePagination
   },
   data() {
     return {
+      /** Đối tượng NVL ban đầu - trước khi thay đổi */
+      materialOld:{},
       /** Danh sách NVL */
       materials: [],
       /** Khóa chính bảng NVL */
       materialId: null,
       /** Một đối tượng NVL */
       material: {
-        MaterialCode: null,
-        MaterialName: null,
-        Note: null,
+        MaterialCode: "",
+        MaterialName: "",
+        Note: "",
         Expiry: 0,
         TimeUnit: null,
         Quantity: 0,
@@ -127,18 +124,13 @@ export default {
       isShowModal: false,
       /** Trạng thái form chi tiết - mặc định là thêm mới */
       formMode: Enum.FormMode.Add,
-      /** Đối tượng phục vụ cho popup */
-      objectPopup:{
-        /** chế độ ẩn/hiện popup (true-hiện; false-ẩn) */
-        IsShowPopup: false,
-        /** Câu cảnh báo lỗi */
-        Message: "Đơn vị chuyển đổi không được trùng với đơn vị tính chính.",
-        /** Trạng thái hiển thị của popup */
-        PopupStatus: 1,
-      }
+      loading : false,
     };
   },
   methods: {
+    setObjectOld(obj){
+      this.materialOld = obj;
+    },
     /**
      * Thay đổi đối tượng sắp xếp khi cột thay đổi
      * Author: CTKimYen (23/1/2022)
@@ -211,6 +203,7 @@ export default {
      */
     getAllData() {
       let me = this;
+      me.loading = true;
       MaterialApi.filter(
         me.pageIndex,
         me.pageSize,
@@ -218,11 +211,11 @@ export default {
         me.objectSort
       )
         .then((response) => {
+          me.loading = false;
           me.materials = response.data.Data;
           me.totalPage = response.data.TotalPage;
           me.totalRecord = response.data.TotalRecord;
           this.materialId = this.materials[0].MaterialId;
-          this.material = this.materials[0];
         })
         .catch((e) => {
           console.log(e);
@@ -245,9 +238,9 @@ export default {
      */
     resetFormData() {
       this.material = {
-        MaterialCode: null,
-        MaterialName: null,
-        Note: null,
+        MaterialCode: "",
+        MaterialName: "",
+        Note: "",
         Expiry: 0,
         TimeUnit: null,
         Quantity: 0,
@@ -292,13 +285,7 @@ export default {
       this.material = entity;
       this.materialId = entity.MaterialId;
     },
-    /**
-     * Ẩn/hiện popup theo tham số
-     * Author: CTKimYen (23/1/2022)
-     */
-    showPopup(objectPopup) {
-      this.objectPopup = objectPopup;
-    },
+
   },
   /**
    * Hook Created

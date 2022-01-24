@@ -37,11 +37,11 @@ export default {
       operator: Enum.Operator.Contain,
       /** Danh sách các tonas tử */
       operators: [
-        { Name: "*.", Show: "* : Chứa", Value: Enum.Operator.Contain },
-        { Name: "=.", Show: "= : Bằng", Value: Enum.Operator.EqualTo },
-        { Name: "+.", Show: "+ : Bắt đầu bằng", Value: Enum.Operator.BeginWith,},
-        { Name: "-.", Show: "- : Kết thúc bằng", Value: Enum.Operator.EndWith },
-        { Name: "!.", Show: "! : Không chứa", Value: Enum.Operator.NotContain },
+        { Name: "*", Show: "* : Chứa", Value: Enum.Operator.Contain },
+        { Name: "=", Show: "= : Bằng", Value: Enum.Operator.EqualTo },
+        { Name: "+", Show: "+ : Bắt đầu bằng", Value: Enum.Operator.BeginWith,},
+        { Name: "-", Show: "- : Kết thúc bằng", Value: Enum.Operator.EndWith },
+        { Name: "!", Show: "! : Không chứa", Value: Enum.Operator.NotContain },
       ],
       /** Giá trị của ô input */
       inputValue: null,

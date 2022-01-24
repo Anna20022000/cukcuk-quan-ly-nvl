@@ -1,34 +1,34 @@
 <template>
-  <div style="display:none" :class="{ 'm-modal-show': isShowPopup }">
+  <div style="display:none" :class="{ 'm-modal-show': show }">
     <div class="m-popup">
       <div class="m-popup-title">CUKCUK - Quản lý nhà hàng</div>
       <div class="m-popup-content">
         <div class="m-flex">
-          <!-- ICON DEPEND popupStatus -->
-          <div class="mi mi-32 mi-warning" v-if="popupStatus == 1 || popupStatus == 2"></div>
-          <div class="mi mi-32 mi-question" v-if="popupStatus == 3"></div>
+          <!-- ICON DEPEND STATUS -->
+          <div class="mi mi-32 mi-warning" v-if="status == 'warning'"></div>
+          <div class="mi mi-32 mi-question" v-if="status == 'confirm' || status == 'question'"></div>
 
           <div class="m-popup-messenger">{{ message }}</div>
         </div>
       </div>
       <!-- ERROR -->
-      <div class="m-popup-bottom m-flex-right" v-if="popupStatus == 1">
-        <button class="m-btn" @click="closePopup()">Đồng ý</button>
+      <div class="m-popup-bottom m-flex-right" v-if="status == 'warning'">
+        <button class="m-btn" @click="btnYesWarning()">Đồng ý</button>
       </div>
 
       <!-- QUESTION: DATA CHANGE -->
-      <!-- <div class="m-popup-bottom m-flex" v-if="popupStatus == 1">
-        <button class="m-btn m-btn-outline" @click="closePopup()">Hủy</button>
+      <div class="m-popup-bottom m-flex" v-if="status == 'question'">
+        <button class="m-btn m-btn-outline" @click="btnCancelQuesion()">Hủy</button>
         <div>
-          <button class="m-btn m-btn-outline mr-10" @click="btnNoOnclick()">
+          <button class="m-btn m-btn-outline mr-10" @click="btnNoQuestion()">
             Không
           </button>
-          <button class="m-btn" @click="btnYesOnclick()">Có</button>
+          <button class="m-btn" @click="btnYesQuestion()">Có</button>
         </div>
-      </div> -->
+      </div>
 
       <!-- DELETE SINGLE -->
-      <!-- <div class="m-popup-bottom m-flex" v-if="popupStatus == 2">
+      <!-- <div class="m-popup-bottom m-flex" v-if="status == 2">
         <button class="m-btn m-btn-outline" @click="closePopupDel()">
           Không
         </button>
@@ -43,36 +43,29 @@
 
 <script>
 export default {
-  props: ["objectPopup"],
+  // props: ["objectPopup"],
+  props: ["status", "message", "show"],
   data() {
     return {
-      popupStatus: 0,
-      message: null,
-      isShowPopup: false,
     };
-  },
-  watch: {
-    objectPopup() {
-      this.popupStatus = this.objectPopup.PopupStatus;
-      this.message = this.objectPopup.Message;
-      this.isShowPopup = this.objectPopup.IsShowPopup;
-    },
   },
   methods: {
     /**
      * close the popup
      * Author: CTKimYen (24/1/2022)
      */
-    closePopup() {
-      this.$emit("showPopup", false);
+    btnYesWarning() {
+      this.$emit("btnYesWarning");
     },
+    
+    // ---------------- QUESTION ---------------
     /**
      * when click button NO in popup Question
      * Author: CTKimYen (24/1/2022)
      */
-    btnNoOnclick() {
+    btnNoQuestion() {
       // close this popup
-      this.closePopup();
+      // this.closePopup();
       // close form
       //   eventBus.$emit("hideModal");
     },
@@ -80,13 +73,15 @@ export default {
      * when click button YES
      * Author: CTKimYen (24/1/2022)
      */
-    btnYesOnclick() {
+    btnYesQuestion() {
       // close this popup
       this.closePopup();
       // save changed of form input data in database
       //   eventBus.$emit("save");
     },
-
+    btnCancelQuesion(){
+      this.$emit("btnCancelQuesion");
+    },
     // ------------ XÓA MỘT ---------------------
 
     /**

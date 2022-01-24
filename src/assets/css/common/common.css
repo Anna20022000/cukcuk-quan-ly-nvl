@@ -38,3 +38,12 @@
 .m-mr-8{
     margin-right: 8px;
 }
+.m-flex-center {
+  display: flex;
+  justify-content: center;
+}
+.m-flex-between{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

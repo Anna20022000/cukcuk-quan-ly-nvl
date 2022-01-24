@@ -24,6 +24,7 @@ Vue.use(VueMask)
 // register directive v-money and component <money>
 Vue.use(money, {precision: 4})
 Vue.use(VTooltip)
+Vue.use(require('vue-shortkey'))
 
 Vue.config.productionTip = false
 new Vue({
