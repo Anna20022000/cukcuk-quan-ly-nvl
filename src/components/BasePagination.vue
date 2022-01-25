@@ -7,12 +7,14 @@
           class="mi-16 mi-page-first"
           @click="btnFirstPageOnClick()"
           :class="{ 'm-disable': pageIndex == 1 }"
+          v-tooltip.bottom="'Trang đầu'"
         ></div>
         <!-- Button trang trước -->
         <div
           class="mi-16 mi-page-pre"
           @click="btnPrevPageOnClick()"
           :class="{ 'm-disable': pageIndex == 1 }"
+          v-tooltip.bottom="'Trang trước'"
         ></div>
         <div class="m-text-paging">|</div>
         <div class="m-text-paging">Trang</div>
@@ -29,21 +31,26 @@
           />
         </div>
         <div class="m-text-paging" style="min-width: 50px">trên {{ totalPage }}</div>
-        <!-- Button trang tiếp theo -->
         <div class="m-text-paging">|</div>
+        <!-- Button trang tiếp theo -->
         <div
           class="mi-16 mi-page-next"
           @click="btnNextPageOnClick()"
           :class="{ 'm-disable': pageIndex == totalPage }"
+          v-tooltip.bottom="'Trang sau'"
         ></div>
         <!-- Button trang cuối cùng -->
         <div
           class="mi-16 mi-page-last"
           @click="btnLastPageOnClick()"
           :class="{ 'm-disable': pageIndex == totalPage }"
+          v-tooltip.bottom="'Trang cuối'"
         ></div>
         <div class="m-text-paging">|</div>
-        <div class="mi-16 mi-page-refresh" @click="onChangePageIndex()"></div>
+        <div class="mi-16 mi-page-refresh"
+          @click="onChangePageIndex()"
+          v-tooltip.bottom="'Tải lại'">
+          </div>
         <div class="m-text-paging">|</div>
       </div>
       <div class="m-chosse-size m-flex-item-center" 

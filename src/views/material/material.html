@@ -1,0 +1,57 @@
+<div class="m-content">
+    <!-- title page -->
+    <div class="m-title">
+      <span>Nguyên vật liệu</span>
+      <div class="m-title-right">
+        <button class="m-btn m-btn-icon">
+          <i class="mi-14 mi-speaker m-mr-8"></i>
+          Phản hồi
+        </button>
+      </div>
+    </div>
+    <!-- end title page -->
+    <!-- Content main -->
+    <div class="m-content-main">
+      <!-- list -->
+      <material-list
+        :materials="materials"
+        :material="material"
+        :materialId="materialId"
+        :mode="formMode"
+        :loading="loading"
+        @showModal="showModal"
+        @resetForm="resetFormData"
+        @editFormMode="editFormMode"
+        @getAllData="getAllData"
+        @getSingle="getSingle"
+        @onClickRowActive="onClickRowActive"
+        @setObjectFilter="setObjectFilter"
+        @onChangeSortObject="onChangeSortObject"
+        @onChangePageIndex="onChangePageIndex"
+      ></material-list>
+    </div>
+    <!-- paginate -->
+    <base-pagination
+      :pageIndex="pageIndex"
+      :pageSize="pageSize"
+      :totalRecord="totalRecord"
+      :totalPage="totalPage"
+      :listPageSizes="listPageSizes"
+      @onChangePageIndex="onChangePageIndex"
+      @onChangePageSize="onChangePageSize"
+    ></base-pagination>
+    <!-- end paginate -->
+    <!-- end content main -->
+    <!-- detail -->
+    <material-detail
+      :material="material"
+      :materialOld="materialOld"
+      :materialId="materialId"
+      :isShow="isShowModal"
+      :mode="formMode"
+      @showModal="showModal"
+      @resetForm="resetFormData"
+      @editFormMode="editFormMode"
+      @getAllData="getAllData"
+    ></material-detail>
+  </div>

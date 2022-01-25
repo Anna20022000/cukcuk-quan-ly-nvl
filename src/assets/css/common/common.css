@@ -16,6 +16,9 @@
     text-align: left;
 }
 /* padding */
+.m-pl-4{
+    padding-left: 4px;
+}
 .m-pl-8{
     padding-left: 8px;
 }
@@ -46,4 +49,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.m-flex-start{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.m-flex-end{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.m-flex-right{
+  display: flex;
+  justify-content: flex-end;
 }

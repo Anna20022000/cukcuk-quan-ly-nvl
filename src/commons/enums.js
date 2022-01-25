@@ -23,9 +23,7 @@ let Enum = {
         /** Thêm */
         Add: 0,
         /** Sửa */
-        Update: 1,
-        /** Nhân bản */
-        // Duplicate: 3
+        Update: 1
     },
     /**
      * Trạng thái cất
@@ -49,6 +47,18 @@ let Enum = {
         Update: 1,
         /** Xóa */
         Delete: 2
+    },
+    /**
+     * Trạng thái của popup
+     * Author: CTKimYen (25/1/2022)
+     */
+    PopupStatus:{
+        /** Popup cảnh báo có 1 button (đồng ý)*/
+        Warning: "warning",
+        /** Popup xác nhận có 2 button (có/không) */
+        Confirm: "confirm",
+        /** Popup câu hỏi xác nhận có 3 button (có/không/hủy) */
+        Question: "question"
     }
 
 }

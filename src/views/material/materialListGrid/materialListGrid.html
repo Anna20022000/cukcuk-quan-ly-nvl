@@ -1,0 +1,217 @@
+<div class="m-content-table">
+  <!-- table -->
+  <table class="m-table">
+    <!-- Dòng tiêu đề + filter -->
+    <thead class="m-text-left">
+      <tr>
+        <!-- Mã -->
+        <th>
+          <div
+            class="m-th-name m-flex-center"
+            @click="onChangeSortObject('MaterialCode')"
+          >
+            Mã nguyên vật liệu
+            <div
+              class="mi-sort-asc"
+              v-show="
+                  sortOrder && sortSubmitted && sortName == 'MaterialCode'
+                "
+            ></div>
+            <div
+              class="mi-sort-desc"
+              v-show="
+                  !sortOrder && sortSubmitted && sortName == 'MaterialCode'
+                "
+            ></div>
+          </div>
+          <base-input-filter
+            :column="'MaterialCode'"
+            @setObjectFilter="setObjectFilter"
+          />
+        </th>
+        <!-- Tên -->
+        <th>
+          <div
+            class="m-th-name m-flex-center"
+            @click="onChangeSortObject('MaterialName')"
+          >
+            Tên nguyên vật liệu
+            <div
+              class="mi-sort-asc"
+              v-show="
+                  sortOrder && sortSubmitted && sortName == 'MaterialName'
+                "
+            ></div>
+            <div
+              class="mi-sort-desc"
+              v-show="
+                  !sortOrder && sortSubmitted && sortName == 'MaterialName'
+                "
+            ></div>
+          </div>
+          <div>
+            <base-input-filter
+              :column="'MaterialName'"
+              @setObjectFilter="setObjectFilter"
+            />
+          </div>
+        </th>
+        <!-- Tính chất -->
+        <th>
+          <div
+            class="m-th-name m-flex-center"
+            @click="onChangeSortObject('MaterialCategoryName')"
+          >
+            Tính chất
+            <div
+              class="mi-sort-asc"
+              v-show="
+                  sortOrder &&
+                  sortSubmitted &&
+                  sortName == 'MaterialCategoryName'
+                "
+            ></div>
+            <div
+              class="mi-sort-desc"
+              v-show="
+                  !sortOrder &&
+                  sortSubmitted &&
+                  sortName == 'MaterialCategoryName'
+                "
+            ></div>
+          </div>
+          <div>
+            <base-input-filter
+              :column="'MaterialCategoryName'"
+              @setObjectFilter="setObjectFilter"
+            />
+          </div>
+        </th>
+        <!-- ĐVT chính -->
+        <th>
+          <div
+            class="m-th-name m-flex-center"
+            @click="onChangeSortObject('UnitName')"
+          >
+            ĐVT chính
+            <div
+              class="mi-sort-asc"
+              v-show="sortOrder && sortSubmitted && sortName == 'UnitName'"
+            ></div>
+            <div
+              class="mi-sort-desc"
+              v-show="!sortOrder && sortSubmitted && sortName == 'UnitName'"
+            ></div>
+          </div>
+          <div>
+            <base-input-filter
+              :column="'UnitName'"
+              @setObjectFilter="setObjectFilter"
+            />
+          </div>
+        </th>
+        <!-- Nhóm nvl -->
+        <th>
+          <div
+            class="m-th-name m-flex-center"
+            @click="onChangeSortObject('MaterialCategoryName')"
+          >
+            Nhóm nguyên vật liệu
+            <div
+              class="mi-sort-asc"
+              v-show="
+                  sortOrder &&
+                  sortSubmitted &&
+                  sortName == 'MaterialCategoryName'
+                "
+            ></div>
+            <div
+              class="mi-sort-desc"
+              v-show="
+                  !sortOrder &&
+                  sortSubmitted &&
+                  sortName == 'MaterialCategoryName'
+                "
+            ></div>
+          </div>
+          <div>
+            <base-input-filter
+              :column="'MaterialCategoryName'"
+              @setObjectFilter="setObjectFilter"
+            />
+          </div>
+        </th>
+        <!-- Ghi chú -->
+        <th>
+          <div
+            class="m-th-name m-flex-center"
+            @click="onChangeSortObject('Note')"
+          >
+            Ghi chú
+            <div
+              class="mi-sort-asc"
+              v-show="sortOrder && sortSubmitted && sortName == 'Note'"
+            ></div>
+            <div
+              class="mi-sort-desc"
+              v-show="!sortOrder && sortSubmitted && sortName == 'Note'"
+            ></div>
+          </div>
+          <div>
+            <base-input-filter
+              :column="'Note'"
+              @setObjectFilter="setObjectFilter"
+            />
+          </div>
+        </th>
+        <!-- Theo dõi -->
+        <th>
+          <div class="m-th-name">Ngừng theo dõi</div>
+          <div>
+            <base-input-filter
+              :column="'IsFollow'"
+              @setObjectFilter="setObjectFilter"
+            />
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        v-show="!loading"
+        v-for="(material, index) in materials"
+        :key="material.MaterialId"
+        :class="{ 'm-row-active': material.MaterialId == materialId }"
+        v-shortkey="{up: ['arrowup'], down: ['arrowdown']}"
+        @shortkey="ArrowUpDown"
+        @click="onClickRowActive(material)"
+        @dblclick="rowOnDblClick(material)"
+      >
+        <td :title="material.MaterialCode">{{ material.MaterialCode }}</td>
+        <td :title="material.MaterialName">{{ material.MaterialName }}</td>
+        <td :title="material.MaterialCategoryName">{{ material.MaterialCategoryName }}</td>
+        <td :title="material.UnitName">{{ material.UnitName }}</td>
+        <td :title="material.MaterialCategoryName">{{ material.MaterialCategoryName }}</td>
+        <td :title="material.Note">{{ material.Note }}</td>
+        <td class="m-text-center">
+          <input
+            type="checkbox"
+            class="m-checkbox"
+            disabled
+            :checked="material.IsFollow==0?true:false"
+          />
+        </td>
+      </tr>
+      <div class="m-loading-table" v-show="loading">
+        <div class="m-loading-content">
+          <vue-loading
+            type="spiningDubbles"
+            color="#3a3a3a"
+            :size="{ width: '18px', height: '18px' }"
+          ></vue-loading>
+          <div class="m-loading-title">Đang lấy dữ liệu...</div>
+        </div>
+      </div>
+    </tbody>
+  </table>
+</div>

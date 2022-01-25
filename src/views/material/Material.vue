@@ -1,67 +1,8 @@
-<template>
-  <div class="m-content">
-    <!-- title page -->
-    <div class="m-title">
-      <span>Nguyên vật liệu</span>
-      <div class="m-title-right">
-        <button class="m-btn m-btn-icon">
-          <i class="mi-14 mi-speaker m-mr-8"></i>
-          Phản hồi
-        </button>
-      </div>
-    </div>
-    <!-- end title page -->
-    <!-- Content main -->
-    <div class="m-content-main">
-      <!-- list -->
-      <material-list
-        :materials="materials"
-        :material="material"
-        :materialId="materialId"
-        :mode="formMode"
-        :loading="loading"
-        @showModal="showModal"
-        @resetForm="resetFormData"
-        @editFormMode="editFormMode"
-        @getAllData="getAllData"
-        @getSingle="getSingle"
-        @onClickRowActive="onClickRowActive"
-        @setObjectFilter="setObjectFilter"
-        @onChangeSortObject="onChangeSortObject"
-        @onChangePageIndex="onChangePageIndex"
-        @setObjectOld="setObjectOld"
-      ></material-list>
-    </div>
-    <!-- paginate -->
-    <base-pagination
-      :pageIndex="pageIndex"
-      :pageSize="pageSize"
-      :totalRecord="totalRecord"
-      :totalPage="totalPage"
-      :listPageSizes="listPageSizes"
-      @onChangePageIndex="onChangePageIndex"
-      @onChangePageSize="onChangePageSize"
-    ></base-pagination>
-    <!-- end paginate -->
-    <!-- end content main -->
-    <!-- detail -->
-    <material-detail
-      :material="material"
-      :materialOld="materialOld"
-      :materialId="materialId"
-      :isShow="isShowModal"
-      :mode="formMode"
-      @showModal="showModal"
-      @resetForm="resetFormData"
-      @editFormMode="editFormMode"
-      @getAllData="getAllData"
-    ></material-detail>
-  </div>
-</template>
+<template src="./material.html"> </template>
 <script>
 import MaterialApi from "@/apis/materialApi.js";
-import MaterialList from "./MaterialList.vue";
-import MaterialDetail from "./MaterialDetail.vue";
+import MaterialList from "./materialList/MaterialList.vue";
+import MaterialDetail from "./materialDetail/MaterialDetail.vue";
 import BasePagination from "../../components/BasePagination.vue";
 import Enum from "@/commons/enums.js";
 
@@ -122,20 +63,18 @@ export default {
       totalRecord: 0,
       /** Ẩn/hiện form chi tiết */
       isShowModal: false,
-      /** Trạng thái form chi tiết - mặc định là thêm mới */
-      formMode: Enum.FormMode.Add,
+      /** Trạng thái form chi tiết */
+      formMode: -1,
+      /** Chế độ ẩn/hiện Loading */
       loading : false,
     };
   },
   methods: {
-    setObjectOld(obj){
-      this.materialOld = obj;
-    },
     /**
      * Thay đổi đối tượng sắp xếp khi cột thay đổi
      * Author: CTKimYen (23/1/2022)
      */
-      onChangeSortObject(objectSort) {
+    onChangeSortObject(objectSort) {
       this.objectSort = objectSort;
       this.getAllData();
     },
@@ -228,6 +167,24 @@ export default {
     getSingle(entity) {
       try {
         this.material = entity;
+        this.materialOld = {
+          MaterialId:entity.MaterialId,
+          MaterialCode: entity.MaterialCode,
+          MaterialName: entity.MaterialName,
+          Note: entity.Note,
+          Expiry: entity.Expiry,
+          TimeUnit: entity.TimeUnit,
+          Quantity: entity.Quantity,
+          IsFollow: entity.IsFollow,
+          UnitId: entity.UnitId,
+          UnitName: entity.UnitName,
+          WarehouseId: entity.WarehouseId,
+          MaterialCategoryId: entity.MaterialCategoryId,
+          MaterialCategoryName: entity.MaterialCategoryName,
+          Conversions: entity.Conversions,
+          CreatedDate: entity.CreatedDate,
+          ModifiedDate: entity.ModifiedDate
+        };
       } catch (error) {
         console.log(error);
       }
@@ -238,6 +195,21 @@ export default {
      */
     resetFormData() {
       this.material = {
+        MaterialCode: "",
+        MaterialName: "",
+        Note: "",
+        Expiry: 0,
+        TimeUnit: null,
+        Quantity: 0,
+        IsFollow: 1,
+        UnitId: null,
+        UnitName: null,
+        WarehouseId: null,
+        MaterialCategoryId: null,
+        MaterialCategoryName: null,
+        Conversions: [],
+      };
+      this.materialOld= {
         MaterialCode: "",
         MaterialName: "",
         Note: "",

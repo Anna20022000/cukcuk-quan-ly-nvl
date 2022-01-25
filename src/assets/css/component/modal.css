@@ -3,7 +3,7 @@
   }
 .m-modal-medium .m-modal{
     width: 750px;
-    height: 492px;
+    min-height: 492px;
     z-index: 21;
     background-color: #fff;
     border-radius: 4px;
@@ -131,7 +131,7 @@
 }
 /* END TAB */
 .m-end-tab{
-    margin: 0 8px;
+    padding: 0 8px 8px;
     display: flex;
     justify-content: flex-start;
 }
@@ -142,7 +142,7 @@
 }
 /* FOOTER */
 .m-modal-footer{
-    margin: 18px 8px 0;
+    margin: 8px;
     height: 25px;
     display: flex;
     justify-content: space-between;

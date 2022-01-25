@@ -1,13 +1,13 @@
 /* popup delete */
 
 .m-popup {
-    position: absolute;
+    position: fixed;
     background-color: #ffffff;
     width: 400px;
     height: 125px;
     right: auto;
     left: 50%;
-    top: 40%;
+    top: 50%;
     z-index: 39000;
     transform: translate(-50% , -50%);
     border-bottom: 5px solid #0072bc;
@@ -44,10 +44,9 @@
     padding: 6px;
     display: flex;
 }
-.m-flex-right{
-    display: flex;
-    justify-content: flex-end;
-}
+.m-popup-bottom button{
+    margin: 0 4px;
+  }
 .m-popup-background{
     z-index: 2000;
     position: fixed;

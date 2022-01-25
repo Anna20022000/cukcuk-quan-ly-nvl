@@ -17,3 +17,9 @@ input.m-checkbox:checked:active{
     background: url(../../resource/checkbox.png) no-repeat;
     background-position: -15px -15px;
 }
+
+/* MODAL CHECKBOX */
+.m-modal-checkbox{
+    margin: 8px 8px;
+    padding-bottom: 8px;
+}

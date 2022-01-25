@@ -1,0 +1,301 @@
+<div
+  class="m-modal-medium"
+  style="display: none"
+  :class="{ 'm-modal-show': isShow }"
+>
+  <div class="m-modal">
+    <div class="m-modal-header">
+      <div class="m-modal-title">{{ title }}</div>
+      <div
+        class="m-close-modal mi-16 mi-close"
+        @click="btnCloseOnClick()"
+        v-shortkey="['esc']"
+        @shortkey="btnCloseOnClick()"
+      ></div>
+    </div>
+    <!-- <form> -->
+    <div class="m-modal-content">
+      <!-- input nhập liệu NVL -->
+      <div class="m-modal-group">
+        <!-- Tên -->
+        <div class="m-modal-col-6 m-row m-pr-20">
+          <div class="m-modal-col-3">Tên <span>(*)</span></div>
+          <div class="m-modal-col-9 m-flex-between">
+            <input
+              type="text"
+              class="m-input"
+              ref="txtMaterialName"
+              v-model="material.MaterialName"
+              @change="getNewMaterialCode"
+              :class="{ 'm-is-invalid': submitted && $v.material.MaterialName.$error, }"
+            />
+            <div
+              class="mi-16 mi-error"
+              v-show="submitted && $v.material.MaterialName.$error"
+              v-tooltip.bottom="{
+                content: submitted && $v.material.MaterialName.$error
+                    ? errMsgEmpty
+                    : null, }"
+            ></div>
+          </div>
+        </div>
+        <!-- Mã -->
+        <div class="m-modal-col-6 m-row">
+          <div class="m-modal-col-3">Mã <span>(*)</span></div>
+          <div class="m-modal-col-9 m-flex-between">
+            <input
+              type="text"
+              class="m-input"
+              v-model="material.MaterialCode"
+              :class="{
+                'm-is-invalid': submitted && $v.material.MaterialCode.$error,
+              }"
+            />
+            <div
+              class="mi-16 mi-error"
+              v-show="submitted && $v.material.MaterialCode.$error"
+              v-tooltip.bottom="{
+                content: submitted && $v.material.MaterialCode.$error && !$v.material.MaterialCode.required
+                    ? errMsgEmpty
+                    : errMsgMaxLength }"
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div class="m-modal-group">
+        <!-- ĐVT -->
+        <div class="m-modal-col-6 m-row">
+          <div class="m-modal-col-3" v-tooltip.bottom="'Đơn vị tính'">
+            ĐVT <span>(*)</span>
+          </div>
+          <div class="m-modal-col-9 m-row-inner m-flex-between">
+            <!-- COMBOBOX -->
+            <v-select
+              class="m-modal-col-6"
+              :options="units"
+              :reduce="(UnitName) => UnitName.UnitId"
+              label="UnitName"
+              v-model="material.UnitId"
+              :class="{
+                'm-is-invalid': submitted && $v.material.UnitId.$error,
+              }"
+            ></v-select>
+            <!-- END COMBOBOX -->
+            <div
+              class="mi-16 mi-error"
+              v-show="submitted && $v.material.UnitId.$error"
+              v-tooltip.bottom="{ content: submitted && $v.material.UnitId.$error  ? errMsgEmpty : null,  }"
+            ></div>
+          </div>
+        </div>
+        <!-- Kho -->
+        <div class="m-modal-col-6 m-row">
+          <div class="m-modal-col-3">Kho ngầm định</div>
+          <div class="m-modal-col-9">
+            <!-- COMBOBOX -->
+            <v-select
+              :options="warehouses"
+              :reduce="(WarehouseName) => WarehouseName.WarehouseId"
+              label="WarehouseName"
+              v-model="material.WarehouseId"
+            ></v-select>
+            <!-- END COMBOBOX -->
+          </div>
+        </div>
+      </div>
+      <div class="m-modal-group">
+        <!-- HSD -->
+        <div class="m-modal-col-6 m-row">
+          <div class="m-modal-col-3">Hạn sử dụng</div>
+          <div class="m-modal-col-9 m-row-inner">
+            <input
+              type="text"
+              class="m-input m-modal-col-6 m-mr-8 m-text-right"
+              v-mask="'##############'"
+              v-model="material.Expiry"
+            />
+            <v-select
+              class="m-modal-col-6"
+              :options="timeUnits"
+              label=""
+              v-model="material.TimeUnit"
+            ></v-select>
+          </div>
+        </div>
+        <!-- Đơn vị thời gian -->
+        <div class="m-modal-col-6 m-row">
+          <div
+            class="m-modal-col-3"
+            v-tooltip.bottom="'Số lượng tồn tối thiểu'"
+          >
+            SL tồn tối thiểu
+          </div>
+          <div class="m-modal-col-3">
+            <!-- <input type="text" class="m-input m-text-right" v-model="material.Quantity" /> -->
+            <money
+              v-model="material.Quantity"
+              v-bind="formatQuantity"
+              class="m-input m-text-right"
+            ></money>
+          </div>
+        </div>
+      </div>
+      <!-- Mô tả -->
+      <div class="m-modal-group m-row m-textarea">
+        <div class="m-modal-col-2">Mô tả</div>
+        <div class="m-modal-col-10">
+          <textarea rows="3" v-model="material.Note"></textarea>
+        </div>
+      </div>
+      <!-- bảng Đơn vị chuyển đổi -->
+      <div class="m-tab-bar">
+        <div class="tab-conversions">Đơn vị chuyển đổi</div>
+      </div>
+      <div class="m-modal-grid-view">
+        <table class="m-modal-table">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th style="width: 25%">Đơn vị chuyển đổi</th>
+              <th style="width: 20%">Tỷ lệ chuyển đổi</th>
+              <th style="width: 20%">Phép tính</th>
+              <th>Mô tả</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(conversion, index) in material.Conversions"
+              :key="index"
+              @click="onClickRowActive(conversion, index)"
+            >
+              <td>{{ index + 1 }}</td>
+              <td>
+                <v-select
+                  :options="units"
+                  :reduce="(UnitName) => UnitName.UnitId"
+                  label="UnitName"
+                  v-model="conversion.UnitId"
+                  @input="messagePopup = duplicateUnit(conversion)"
+                ></v-select>
+              </td>
+              <td>
+                <money
+                  v-model="conversion.ConversionRate"
+                  v-bind="formatQuantity"
+                  class="m-input m-text-right"
+                ></money>
+              </td>
+              <td>
+                <v-select
+                  :options="calculations"
+                  :reduce="(Name) => Name.Value"
+                  label="Name"
+                  v-model="conversion.Calculation"
+                ></v-select>
+              </td>
+              <td>
+                <input
+                  readonly
+                  type="text"
+                  class="m-input"
+                  :value="description(conversion)"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Thêm và xóa dòng -->
+      <div class="m-end-tab">
+        <button
+          class="m-btn m-btn-icon m-mr-5"
+          @click="btnAddLineOnClick()"
+          v-shortkey="['ctrl','insert']"
+          @shortkey="btnAddLineOnClick()"
+          title="Ctrl+Insert"
+        >
+          <i class="mi mi-16 mi-new m-mr-8"></i>
+          Thêm dòng
+        </button>
+        <button
+          class="m-btn m-btn-icon"
+          @click="btnRemoveLineOnClick()"
+          v-shortkey="['ctrl','del']"
+          @shortkey="btnRemoveLineOnClick()"
+          title="Ctrl+Delete"
+          :class="{'m-disable': material.Conversions == null || material.Conversions.length <1 || conversionIndex <0 }"
+        >
+          <i class="mi mi-16 mi-delete m-mr-8"></i>
+          Xóa dòng
+        </button>
+      </div>
+    </div>
+    <!-- Check box Ngừng theo dõi -->
+    <div class="m-modal-checkbox m-flex-start" v-show="mode == 1">
+      <input
+        type="checkbox"
+        class="m-checkbox"
+        id="follow"
+        v-model="isFollow"
+      />
+      <label for="follow" class="m-pl-4">Ngừng theo dõi</label>
+    </div>
+    <!-- Các button -->
+    <div class="m-modal-footer">
+      <div class="m-footer-left">
+        <button class="m-btn m-btn-icon" @click="btnHelpOnClick()"
+        v-shortkey="['f1']"
+        @shortkey="btnHelpOnClick()"
+        title="F1">
+          <i class="mi mi-16 mi-help m-mr-8"></i>
+          Giúp
+        </button>
+      </div>
+      <div class="m-footer-right">
+        <button
+          class="m-btn m-btn-icon m-mr-8"
+          @click="btnSaveOnClick(0)"
+          v-shortkey="['ctrl', 's']"
+          @shortkey="btnSaveOnClick(0)"
+          title="Ctrl+S"
+        >
+          <i class="mi-16 mi-save m-mr-8"></i>
+          Cất
+        </button>
+        <button
+          class="m-btn m-btn-icon m-mr-8"
+          @click="btnSaveOnClick(1)"
+          v-shortkey="['ctrl','shift', 's']"
+          @shortkey="btnSaveOnClick(1)"
+          title="Ctrl+Shift+S"
+        >
+          <i class="mi-16 mi-save-add m-mr-8"></i>
+          Cất và thêm
+        </button>
+        <button
+          class="m-btn m-btn-icon"
+          @click="hideModal()"
+          v-shortkey="['ctrl','b']"
+          @shortkey="hideModal()"
+          title="Ctrl+B"
+        >
+          <i class="mi-16 mi-cancel m-mr-8"></i>
+          Hủy bỏ
+        </button>
+      </div>
+    </div>
+    <!-- </form> -->
+  </div>
+  <div class="modal-background"></div>
+  <!-- POPUP -->
+  <base-popup
+    :status="popupStatus"
+    :message="message"
+    :show="isShowPopup"
+    @btnYesWarning="hidePopup"
+    @btnCancelQuesion="hidePopup"
+    @btnYesQuestion="btnSaveOnClick(0)"
+    @btnNoQuestion="hideModal"
+  ></base-popup>
+  <!-- END POPUP -->
+</div>

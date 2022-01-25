@@ -7,11 +7,11 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: '/Material'
+    redirect: '/material'
   },
   {
-    path: '/Material',
-    name: 'Material',
+    path: '/material',
+    name: 'material',
     component: Material
   },
   
